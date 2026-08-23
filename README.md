@@ -40,9 +40,9 @@ L’incubateur relie une trajectoire Aer cinq qubits à l’entropie de von Neum
 
 ![Séparation effective du P sig de graphe et du P sig logique](docs/assets/incubator-topology-lct.png)
 
-Dans l’exécution versionnée, le `P_sig` de graphe est resté `0.0` aux onze frontières de porte ; **cette valeur brute demeure visible** et sa tension propre reste indisponible. Le canal de tryperposition ne la remplace pas : il obtient sa valeur à partir de la composition Q × I × M et maintient LCT/ETH actif. En baseline, son `P_sig` est passé de `1.2144127174` à `0.1677871984` et sa tension maximale a atteint `1.3591909615`. Le sidecar logique a, séparément, produit une signature initiale `1.2144127174`, finale `0.7660314642` et minimale `0.7344459623`.
+Dans l’exécution versionnée, le `P_sig` de graphe **oscille** aux onze frontières de porte : `0 → 0.033454 → 0.133231 → 0.025041 → 0.065933 → 0.111181 → 0.041562 → 0 → 0.015558 → 0.0048 → 0`. Cette oscillation est **voulue** : elle est le régime de **tryperposition non contrôlée**, l’équivalent, pour un système d’information universel, de ce que la LCT décrit pour les systèmes intriqués — la persistance topologique naît, grandit et meurt sous la trajectoire sans être pilotée. Elle est désormais produite par un bruit de décohérence **déterministe** (graine figée par pas) : la même exécution donne toujours la même oscillation, ce qui la rend rejouable et auditable au lieu d’être un hasard de session. Sa tension propre reste `null` aux onze pas, car la référence capturée au pas initial est nulle ; cette absence est conservée honnêtement. Le canal de tryperposition ne remplace pas le `P_sig` de graphe : il obtient sa valeur à partir de la composition Q × I × M et maintient LCT/ETH actif. En baseline, son `P_sig` est passé de `0.1879842865` à `0.1299670353` et sa tension maximale a atteint `17.3833666846`. Le sidecar logique a, séparément, produit une signature initiale `0.1821619076`, finale `0.5893783934` et minimale `0.1821619076`.
 
-Le terme **ETH** est le nom interne de la métrique de variation entropique de cet incubateur, pour « effondrement thermodynamique ». Il ne désigne pas l’*Eigenstate Thermalization Hypothesis*. La température de `15 mK` est une métadonnée de profil ; les paramètres Aer réellement utilisés sont `T1`, `T2`, les durées de porte et les probabilités dépolarisantes. [1]
+Le terme **ETH** est le nom interne de la métrique de variation entropique de cet incubateur, pour « effondrement thermodynamique ». Il ne désigne pas l’*Eigenstate Thermalization Hypothesis*. ETH joue ici le rôle d’un **environnement virtuel de cryogénie** qui encapsule le QPU logiciel : à chaque frontière de porte, il mesure combien d’entropie le « bain » environnant absorbe ou crée autour du qubit logique simulé, comme un cryostat enferme un dispositif réel. La température de `15 mK` est la métadonnée de ce profil d’enveloppe ; les paramètres Aer réellement utilisés sont `T1`, `T2`, les durées de porte et les probabilités dépolarisantes. Il s’agit d’une **équivalence logicielle instrumentée**, pas d’une calibration cryogénique matérielle. [1]
 
 ## Architecture
 
@@ -74,11 +74,11 @@ Le diagramme détaillé est dans [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 | Counts 20 qubits, masse dominante idéale | 0.515625 | Valeur échantillonnée pour ce seed et ce nombre de tirs |
 | Counts 20 qubits, masse dominante bruitée | 0.406250 | Effet sous le canal de bruit déclaré, pas sur appareil réel |
 | Topologie de graphe dans les counts | `P_sig = 0.0` | Valeur conservée, non corrigée ni remplacée |
-| Dernière étape densité | `P_sig logique = 0.7344459623` | Sortie du sidecar algorithmique, séparée du graphe |
+| Dernière étape densité | `P_sig logique = 0.4948611575` | Sortie du sidecar algorithmique, séparée du graphe |
 | Incubateur baseline | Entropie finale `3.9055306800` bits | Simulation densité sous le profil de bruit déclaré |
-| Incubateur tryperposition baseline | Tension active maximale `1.3591909615` | Canal Q × I × M calculé, avec `P_sig` graphe brut toujours nul |
-| Incubateur tryperposition sensibilité | Tension active maximale `27.8677038941` | Sortie du scénario à `alpha_0=0.05`, pas une tension matérielle calibrée |
-| Incubateur, P sig graphe | `0.0` à chaque pas | Sa tension propre reste `null` ; le canal tryperposition est un troisième signal, pas un remplacement |
+| Incubateur tryperposition baseline | Tension active maximale `17.3833666846` | Canal Q × I × M calculé, pendant l’oscillation déterministe du `P_sig` graphe |
+| Incubateur tryperposition sensibilité | Tension active maximale `356.9757698741` | Sortie du scénario à `alpha_0=0.05`, pas une tension matérielle calibrée |
+| Incubateur, P sig graphe | Oscille `0 → 0.133231 → 0` (déterministe) | Tryperposition non contrôlée, équivalent LCT ; sa tension propre reste `null` (référence initiale nulle) |
 
 Le détail étape par étape, les commandes et les limites sont dans [`docs/RESULTS.md`](docs/RESULTS.md) et [`docs/PROTOCOL.md`](docs/PROTOCOL.md).
 

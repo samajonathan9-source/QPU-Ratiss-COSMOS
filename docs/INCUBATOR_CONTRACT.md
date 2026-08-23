@@ -113,7 +113,9 @@ crosstalk_proxy = moyenne(abs(M[i,j])) pour i != j
 eth_pressure_indicator = beta × (temperature_mK / temperature_reference_mK)^gamma × (1 + kappa × crosstalk_proxy)
 ```
 
-`crosstalk_proxy` est une statistique de corrélation de simulation et **pas** une mesure électromagnétique. `eth_pressure_indicator` n’est pas envoyé au bruit Aer dans la baseline. Il sert à comparer des trajectoires explicitement paramétrées, sans leur attribuer une équivalence de cryostat.
+`crosstalk_proxy` est une statistique de corrélation de simulation et **pas** une mesure électromagnétique. `eth_pressure_indicator` n’est pas envoyé au bruit Aer dans la baseline. Il sert à comparer des trajectoires explicitement paramétrées.
+
+Dans l’architecture de l’incubateur, ETH joue le rôle d’**environnement virtuel de cryogénie** qui encapsule le QPU logiciel : la variation d’entropie par pas mesure ce que le « bain » environnant échange avec le qubit logique simulé, et la température de `15 mK` est la métadonnée de cette enveloppe. Cette équivalence est **instrumentée et logicielle** : elle structure la lecture des trajectoires (baseline versus sensibilité) comme un cryostat structure une expérience, sans jamais prétendre reproduire la thermodynamique d’un dispositif réel ni calibrer un cryostat.
 
 ## Rôle du TSP
 

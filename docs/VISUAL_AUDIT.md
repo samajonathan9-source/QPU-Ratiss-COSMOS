@@ -14,6 +14,6 @@ Le panneau inférieur conserve ensemble le taux ETH de la baseline, la tension d
 
 ## `incubator-topology-lct.png`
 
-La seconde figure conserve visiblement séparés `P_sig` de graphe, `P_sig` logique du sidecar, `P_sig` de tryperposition et cohérence logique. La courbe de graphe est bien affichée à `0.0` pour tous les pas : elle n’est remplacée ni par la signature logique ni par la tryperposition. Les croix rouges du panneau inférieur signalent que la tension de graphe est indisponible lorsque son dénominateur dépend d’un `P_sig` de référence nul ; la courbe bleue représente le facteur tryperposition calculé séparément.
+La seconde figure conserve visiblement séparés `P_sig` de graphe, `P_sig` logique du sidecar, `P_sig` de tryperposition et cohérence logique. La courbe de graphe affiche son oscillation déterministe réelle (cycles H1 finis à sept pas sur onze, maximum `0.133231`) : elle n’est lissée, ni remplacée par la signature logique, ni par la tryperposition. Les croix rouges du panneau inférieur signalent que la tension de graphe reste indisponible lorsque son dénominateur dépend d’un `P_sig` de référence nul (capturé au pas initial) ; la courbe bleue représente le facteur tryperposition calculé séparément.
 
 Les axes et légendes sont lisibles. La figure visualise des métriques d’une simulation locale et d’un sidecar algorithmique ; elle ne suggère ni qubit topologique matériel ni calibration cryogénique.

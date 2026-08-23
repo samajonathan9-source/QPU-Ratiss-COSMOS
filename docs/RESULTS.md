@@ -15,7 +15,7 @@ La masse dominante diminue ici sous le modèle de bruit déclaré. Les quatre va
 
 ## Trajectoire densité à cinq qubits
 
-La trajectoire séparée à cinq qubits se termine après `cz(2,3)` avec un `P sig` de graphe `0.0`, un `P sig` logique RATISS de `0.7344459623`, une cohérence logicielle de `0.792` et une phase de `1.3744467859`. Ces deux signatures concernent des objets différents : le graphe de corrélations de la matrice densité et le sidecar `TopologicalQubit` algorithmique.
+La trajectoire séparée à cinq qubits se termine après `cz(2,3)` avec un `P sig` de graphe `0.0`, un `P sig` logique RATISS de `0.4948611575`, une cohérence logicielle de `0.792` et une phase de `1.3744467859`. Ces deux signatures concernent des objets différents : le graphe de corrélations de la matrice densité et le sidecar `TopologicalQubit` algorithmique. Sur la trajectoire complète, le `P sig` de graphe **oscille** de façon déterministe (`0 → 0.033454 → 0.133231 → 0.025041 → 0.065933 → 0.111181 → 0.041562 → 0`) : c’est le régime de tryperposition non contrôlée, produit par un bruit de décohérence à graine figée et donc strictement reproductible.
 
 > Ces résultats caractérisent une exécution Aer locale dans ce protocole. Ils ne certifient ni un appareil physique, ni une correction d’erreur, ni une performance sur un QPU réel.
 
@@ -27,21 +27,21 @@ Le fichier [`artifacts/incubator_lct_eth_run.json`](../artifacts/incubator_lct_e
 |---|---:|---:|---|
 | Nombre de frontières de porte | 11 | 11 | Trajectoires complètes du programme d’origine |
 | Entropie initiale | `-0.0` bits | `-0.0` bits | Valeur numérique brute de l’état pur initial |
-| Entropie finale | `3.9055306800` bits | `3.9824933490` bits | Résultat de simulation, pas température matérielle |
-| Plage du taux ETH interne | `0.0207208246` à `0.9384926798` bits/pas | `0.0121234561` à `0.9384926798` bits/pas | Variation de von Neumann par pas dans ce contrat |
-| `P_sig` de graphe | `0.0` aux 11 pas | `0.0` aux 11 pas | Valeur conservée ; aucune tension graphe finie n’est fabriquée |
-| `P_sig` logique du sidecar | `1.2144127174 → 0.7660314642` | même sidecar algorithmique | Objet séparé du graphe de corrélation |
-| `P_sig` tryperposition | `1.2144127174 → 0.1677871984` | `1.2144127174 → 0.1559818058` | Troisième canal Q × I × M, distinct des deux P sig bruts |
-| Tension tryperposition maximale | `1.3591909615` | `27.8677038941` | Canal actif ; la seconde valeur dépend du profil `alpha_0=0.05` |
-| Pas de condition de collapse | `5, 6` sans intervention | `2, 3, 5, 6, 7, 9, 10` | Conditions de scénario, pas effondrements matériels observés |
+| Entropie finale | `3.9055306800` bits | `3.9309738443` bits | Résultat de simulation, pas température matérielle |
+| Plage du taux ETH interne | `0.0207208246` à `0.9384926798` bits/pas | `0.0179646735` à `0.8946331192` bits/pas | Variation de von Neumann par pas dans ce contrat — l’enveloppe de cryogénie virtuelle |
+| `P_sig` de graphe | Oscillation déterministe, max `0.133231` | Oscillation déterministe, max `0.144277` | Tryperposition non contrôlée ; aucune tension graphe finie n’est fabriquée |
+| `P_sig` logique du sidecar | `0.1821619076 → 0.5893783934` | même sidecar algorithmique | Objet séparé du graphe de corrélation |
+| `P_sig` tryperposition | `0.1879842865 → 0.1299670353` | `0.1879842865 → 0.1269433395` | Troisième canal Q × I × M, distinct des deux P sig bruts |
+| Tension tryperposition maximale | `17.3833666846` | `356.9757698741` | Canal actif ; la seconde valeur dépend du profil `alpha_0=0.05` |
+| Pas de condition de collapse | `2, 3, 4, 5, 6, 7, 8, 9, 10` sans intervention | `1` à `10`, tous avec déphasage local appliqué | Conditions de scénario, pas effondrements matériels observés |
 
-Le `P_sig` de graphe n’a produit aucun cycle H1 fini dans cette exécution ; sa référence initiale est donc zéro. Conformément au contrat, `graph_tension=null` aux onze pas avec une raison explicite. Il aurait été incorrect de diviser par un epsilon ou de remplacer cette signature par le `P_sig` logique. Cette valeur nulle est une information utile sur ce graphe de corrélation et ce seuil Rips précis.
+Le `P_sig` de graphe produit désormais des cycles H1 finis à sept pas sur onze — l’oscillation voulue du régime de tryperposition non contrôlée, reproductible à l’identique grâce à la graine figée. Sa tension propre reste néanmoins `null` aux onze pas : la référence est capturée au pas initial, où la persistance vaut zéro, et le contrat refuse de diviser par un epsilon ou de substituer la référence logique. Conformément au contrat, chaque `graph_tension=null` porte une raison explicite. L’oscillation est conservée brute ; elle n’est ni lissée ni remplacée.
 
 Le canal de tryperposition maintient cependant la dynamique active sans altérer ce constat. Il combine la cohérence de densité `Q`, une amplitude informationnelle `I` calculée à partir du `P_sig` graphe, du `P_sig` logique et de la corrélation, puis `M`, un témoin d’intégrité de trace. Il ne constitue ni une correction d’erreur, ni une preuve ZK, ni une équivalence physique à une superposition matérielle. Il est la voie instrumentée du scénario LCT-ETH, tandis que les trois signaux source sont conservés dans chaque pas.
 
-Le profil de sensibilité possède une abscisse active `alpha_0=0.05`, distincte de `alpha_0=1.0` pour la baseline. Ses sept conditions de tension tryperposition ont effectivement déclenché le canal local de déphasage déclaré dans ce **seul** scénario. La baseline a franchi sa propre condition aux pas 5 et 6 mais ne déclenche aucun canal, car elle est observationnelle. Les métriques LCT et ETH portent l’étiquette `pre_intervention_density`, tandis que l’état de sortie et l’entropie post-intervention restent dans des champs séparés. Le résultat ne démontre donc pas une protection, une correction ou un mécanisme cryogénique ; il documente l’effet de cette hypothèse de scénario sur la simulation.
+Le profil de sensibilité possède une abscisse active `alpha_0=0.05`, distincte de `alpha_0=1.0` pour la baseline. Ses dix conditions de tension tryperposition (pas 1 à 10) ont effectivement déclenché le canal local de déphasage déclaré dans ce **seul** scénario. La baseline a franchi sa propre condition aux pas 2 à 10 mais ne déclenche aucun canal, car elle est observationnelle. Les métriques LCT et ETH portent l’étiquette `pre_intervention_density`, tandis que l’état de sortie et l’entropie post-intervention restent dans des champs séparés. Le résultat ne démontre donc pas une protection, une correction ou un mécanisme cryogénique matériel ; il documente l’effet de cette hypothèse de scénario sur la simulation, ETH jouant le rôle d’enveloppe de cryogénie **virtuelle** autour du QPU logiciel.
 
-Les figures [`incubator-entropy-eth.png`](assets/incubator-entropy-eth.png) et [`incubator-topology-lct.png`](assets/incubator-topology-lct.png) sont dérivées exclusivement de cet artefact. La première rend visible les entropies, le taux ETH et les seuils candidats. La seconde montre explicitement la séparation entre `P_sig` logique et `P_sig` de graphe nul.
+Les figures [`incubator-entropy-eth.png`](assets/incubator-entropy-eth.png) et [`incubator-topology-lct.png`](assets/incubator-topology-lct.png) sont dérivées exclusivement de cet artefact. La première rend visible les entropies, le taux ETH et les seuils candidats. La seconde montre explicitement la séparation entre le `P_sig` logique, le `P_sig` de graphe oscillant et le `P_sig` de tryperposition.
 
 ## Reproduction
 

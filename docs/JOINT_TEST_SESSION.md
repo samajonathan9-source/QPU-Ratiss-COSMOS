@@ -26,7 +26,7 @@ python3 scripts/generate_incubator_figures.py \
 pytest -q
 ```
 
-La référence actuelle compte onze frontières de porte par scénario. Elle conserve `graph_P_sig=0.0` à chaque pas, une tension de graphe `null` avec une raison explicitement enregistrée, une signature logique séparée et un troisième `P_sig_tryperposition` actif. Une différence doit être notée avant toute interprétation.
+La référence actuelle compte onze frontières de porte par scénario. Elle conserve l’oscillation déterministe du `graph_P_sig` (tryperposition non contrôlée, graine figée), une tension de graphe `null` avec une raison explicitement enregistrée (référence initiale nulle), une signature logique séparée et un troisième `P_sig_tryperposition` actif. Une différence doit être notée avant toute interprétation.
 
 ## Étape 2 — Lire les quatre contrastes utiles
 
