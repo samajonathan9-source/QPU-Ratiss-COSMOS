@@ -1,0 +1,5 @@
+__pycache__/
+.pytest_cache/
+artifacts/*.json
+!artifacts/.gitkeep
+!artifacts/cosmos_run.json
