@@ -27,16 +27,19 @@ Le fichier [`artifacts/incubator_lct_eth_run.json`](../artifacts/incubator_lct_e
 |---|---:|---:|---|
 | Nombre de frontières de porte | 11 | 11 | Trajectoires complètes du programme d’origine |
 | Entropie initiale | `-0.0` bits | `-0.0` bits | Valeur numérique brute de l’état pur initial |
-| Entropie finale | `3.9055306800` bits | `3.9869217504` bits | Résultat de simulation, pas température matérielle |
+| Entropie finale | `3.9055306800` bits | `3.9824933490` bits | Résultat de simulation, pas température matérielle |
 | Plage du taux ETH interne | `0.0207208246` à `0.9384926798` bits/pas | `0.0121234561` à `0.9384926798` bits/pas | Variation de von Neumann par pas dans ce contrat |
 | `P_sig` de graphe | `0.0` aux 11 pas | `0.0` aux 11 pas | Valeur conservée ; aucune tension graphe finie n’est fabriquée |
 | `P_sig` logique du sidecar | `1.2144127174 → 0.7660314642` | même sidecar algorithmique | Objet séparé du graphe de corrélation |
-| Tension logique maximale | `0.4562178860` | `9.5387401633` | La seconde valeur dépend du profil de sensibilité `alpha_0=0.05` |
-| Pas de condition de collapse | aucun | `2, 3, 5, 6, 7, 10` | Conditions de scénario, pas effondrements matériels observés |
+| `P_sig` tryperposition | `1.2144127174 → 0.1677871984` | `1.2144127174 → 0.1559818058` | Troisième canal Q × I × M, distinct des deux P sig bruts |
+| Tension tryperposition maximale | `1.3591909615` | `27.8677038941` | Canal actif ; la seconde valeur dépend du profil `alpha_0=0.05` |
+| Pas de condition de collapse | `5, 6` sans intervention | `2, 3, 5, 6, 7, 9, 10` | Conditions de scénario, pas effondrements matériels observés |
 
 Le `P_sig` de graphe n’a produit aucun cycle H1 fini dans cette exécution ; sa référence initiale est donc zéro. Conformément au contrat, `graph_tension=null` aux onze pas avec une raison explicite. Il aurait été incorrect de diviser par un epsilon ou de remplacer cette signature par le `P_sig` logique. Cette valeur nulle est une information utile sur ce graphe de corrélation et ce seuil Rips précis.
 
-Le profil de sensibilité possède une abscisse logique `alpha_0=0.05`, distincte de `alpha_0=1.0` pour la baseline. Ses six conditions de tension ont effectivement déclenché le canal local de déphasage déclaré dans ce **seul** scénario. Les métriques LCT et ETH portent l’étiquette `pre_intervention_density`, tandis que l’état de sortie et l’entropie post-intervention restent dans des champs séparés. Le résultat ne démontre donc pas une protection, une correction ou un mécanisme cryogénique ; il documente l’effet de cette hypothèse de scénario sur la simulation.
+Le canal de tryperposition maintient cependant la dynamique active sans altérer ce constat. Il combine la cohérence de densité `Q`, une amplitude informationnelle `I` calculée à partir du `P_sig` graphe, du `P_sig` logique et de la corrélation, puis `M`, un témoin d’intégrité de trace. Il ne constitue ni une correction d’erreur, ni une preuve ZK, ni une équivalence physique à une superposition matérielle. Il est la voie instrumentée du scénario LCT-ETH, tandis que les trois signaux source sont conservés dans chaque pas.
+
+Le profil de sensibilité possède une abscisse active `alpha_0=0.05`, distincte de `alpha_0=1.0` pour la baseline. Ses sept conditions de tension tryperposition ont effectivement déclenché le canal local de déphasage déclaré dans ce **seul** scénario. La baseline a franchi sa propre condition aux pas 5 et 6 mais ne déclenche aucun canal, car elle est observationnelle. Les métriques LCT et ETH portent l’étiquette `pre_intervention_density`, tandis que l’état de sortie et l’entropie post-intervention restent dans des champs séparés. Le résultat ne démontre donc pas une protection, une correction ou un mécanisme cryogénique ; il documente l’effet de cette hypothèse de scénario sur la simulation.
 
 Les figures [`incubator-entropy-eth.png`](assets/incubator-entropy-eth.png) et [`incubator-topology-lct.png`](assets/incubator-topology-lct.png) sont dérivées exclusivement de cet artefact. La première rend visible les entropies, le taux ETH et les seuils candidats. La seconde montre explicitement la séparation entre `P_sig` logique et `P_sig` de graphe nul.
 

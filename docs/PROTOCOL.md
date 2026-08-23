@@ -20,7 +20,7 @@ Chaque exécution écrit sa configuration exacte, les versions logicielles, le s
 
 ## Extension incubateur : baseline et sensibilité distinctes
 
-L’incubateur enregistre une baseline `baseline_observational` qui observe le circuit Aer sans modifier sa matrice densité lorsque la condition de tension est satisfaite. La dérive de cette trajectoire est l’objet de mesure. Un second scénario, `lct_eth_sensitivity_local_dephasing`, peut appliquer un canal local `Z` uniquement après avoir enregistré les métriques de pré-intervention. Le canal, sa force, les qubits affectés et chaque pas de condition satisfaite sont versionnés dans l’artefact ; la baseline n’est ni réécrite ni remplacée.
+L’incubateur enregistre une baseline `baseline_observational` qui observe le circuit Aer sans modifier sa matrice densité lorsque la condition de tension est satisfaite. La dérive de cette trajectoire est l’objet de mesure. La condition active est issue de `P_sig_tryperposition`, calculé par la composition Q × I × M ; `graph_P_sig` reste publié séparément, y compris lorsqu’il vaut zéro et que `graph_tension=null`. Un second scénario, `lct_eth_sensitivity_local_dephasing`, peut appliquer un canal local `Z` uniquement après avoir enregistré les métriques de pré-intervention. Le canal, sa force, les qubits affectés et chaque pas de condition satisfaite sont versionnés dans l’artefact ; la baseline n’est ni réécrite ni remplacée.
 
 Le contrat complet, les conventions d’entropie, la règle de `null` pour un dénominateur nul et le statut de la température figurent dans [`INCUBATOR_CONTRACT.md`](INCUBATOR_CONTRACT.md). Le contrat ne transforme pas `temperature_millikelvin` en `T1`, `T2` ou durée de porte : ces derniers restent des paramètres Aer déclarés distinctement. [1]
 

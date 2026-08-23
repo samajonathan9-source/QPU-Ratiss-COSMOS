@@ -45,7 +45,8 @@ def _summary(scenario: dict) -> dict:
     entropy = _series(scenario, ["density", "entropy_bits"])
     logical_psig = _series(scenario, ["topology", "logical_P_sig"])
     graph_psig = _series(scenario, ["topology", "graph_P_sig"])
-    tension = _series(scenario, ["eth", "logical_tension"])
+    tryperposition_psig = _series(scenario, ["topology", "P_sig_tryperposition"])
+    tension = _series(scenario, ["eth", "tryperposition_tension"])
     graph_tension = _series(scenario, ["eth", "graph_tension"])
     eth_rate = _series(scenario, ["eth", "eth_rate_bits_per_step"])
     collapse_steps = [step["step"] for step in steps if step["eth"]["collapse_condition_met"]]
@@ -66,7 +67,11 @@ def _summary(scenario: dict) -> dict:
         "logical_psig_final": logical_psig[-1],
         "logical_psig_min": min(logical_psig),
         "logical_psig_max": max(logical_psig),
-        "logical_tension_max": None if not tension_values else float(max(tension_values)),
+        "tryperposition_psig_initial": tryperposition_psig[0],
+        "tryperposition_psig_final": tryperposition_psig[-1],
+        "tryperposition_psig_min": min(tryperposition_psig),
+        "tryperposition_psig_max": max(tryperposition_psig),
+        "tryperposition_tension_max": None if not tension_values else float(max(tension_values)),
         "graph_tension_unavailable_steps": [step["step"] for step in steps if step["eth"]["graph_tension"] is None],
         "collapse_condition_steps": collapse_steps,
         "intervention_applied_steps": intervention_steps,
@@ -85,7 +90,7 @@ def build_figures(document: dict, output_dir: Path) -> dict:
     sens_entropy = np.asarray(_series(sensitivity, ["density", "entropy_bits"]), dtype=float)
     sens_pre_entropy = np.asarray(_series(sensitivity, ["pre_intervention_density", "entropy_bits"]), dtype=float)
     base_rates = _series(baseline, ["eth", "eth_rate_bits_per_step"])
-    sens_tension = _series(sensitivity, ["eth", "logical_tension"])
+    sens_tension = _series(sensitivity, ["eth", "tryperposition_tension"])
     collapse_steps = [step["step"] for step in sensitivity["steps"] if step["eth"]["collapse_condition_met"]]
 
     fig, axes = plt.subplots(2, 1, figsize=(11, 8), sharex=True, layout="constrained")
@@ -102,7 +107,7 @@ def build_figures(document: dict, output_dir: Path) -> dict:
     rate_x, rate_y = _finite(base_rates)
     tension_x, tension_y = _finite(sens_tension)
     axes[1].plot(rate_x, rate_y, marker="o", color=PALETTE["baseline"], label="Taux ETH baseline (bits/pas)")
-    axes[1].plot(tension_x, tension_y, marker="D", color=PALETTE["logical"], label="Tension logique, sensibilité")
+    axes[1].plot(tension_x, tension_y, marker="D", color=PALETTE["logical"], label="Tension tryperposition, sensibilité")
     axes[1].axhline(1.0, color=PALETTE["collapse"], linestyle="--", linewidth=1.0, label="Seuil candidat = 1")
     for step in collapse_steps:
         axes[1].axvline(step, color=PALETTE["collapse"], linewidth=1.0, alpha=0.32)
@@ -116,14 +121,17 @@ def build_figures(document: dict, output_dir: Path) -> dict:
 
     graph_psig = np.asarray(_series(baseline, ["topology", "graph_P_sig"]), dtype=float)
     logical_psig = np.asarray(_series(baseline, ["topology", "logical_P_sig"]), dtype=float)
+    tryperposition_psig = np.asarray(_series(baseline, ["topology", "P_sig_tryperposition"]), dtype=float)
     logical_coherence = np.asarray(_series(baseline, ["topology", "logical_coherence"]), dtype=float)
     logical_lct = np.asarray(_series(baseline, ["lct", "lct_factor_logical"]), dtype=float)
+    tryperposition_lct = np.asarray(_series(baseline, ["lct", "lct_factor_tryperposition"]), dtype=float)
     phase = np.asarray(_series(baseline, ["lct", "phase_signed"]), dtype=float)
     graph_tension = _series(baseline, ["eth", "graph_tension"])
 
     fig, axes = plt.subplots(2, 1, figsize=(11, 8), sharex=True, layout="constrained")
     axes[0].plot(steps, graph_psig, marker="o", color=PALETTE["graph"], label="P_sig graphe")
     axes[0].plot(steps, logical_psig, marker="D", color=PALETTE["logical"], label="P_sig logique (sidecar)")
+    axes[0].plot(steps, tryperposition_psig, marker="^", color=PALETTE["baseline"], label="P_sig tryperposition actif")
     axes[0].plot(steps, logical_coherence, marker="s", color=PALETTE["coherence"], label="Cohérence logique (sidecar)")
     axes[0].set_ylabel("Signature / cohérence")
     axes[0].set_title("Incubateur COSMOS — plans topologiques conservés séparément")
@@ -132,6 +140,7 @@ def build_figures(document: dict, output_dir: Path) -> dict:
 
     axes[1].plot(steps, phase, marker="o", color=PALETTE["graph"], label="Phase LCT signée")
     axes[1].plot(steps, logical_lct, marker="D", color=PALETTE["logical"], label="Facteur LCT logique")
+    axes[1].plot(steps, tryperposition_lct, marker="^", color=PALETTE["baseline"], label="Facteur LCT tryperposition")
     graph_unavailable = [index for index, value in enumerate(graph_tension) if value is None]
     axes[1].scatter(graph_unavailable, np.zeros(len(graph_unavailable)), marker="x", color=PALETTE["collapse"], label="Tension graphe indisponible")
     axes[1].axhline(0.0, color="#777777", linewidth=0.8)

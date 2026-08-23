@@ -32,6 +32,9 @@ def test_incubator_artifact_preserves_zero_graph_psig_and_unavailable_tension():
     for step in baseline["steps"]:
         if step["topology"]["graph_P_sig"] == 0.0:
             assert step["eth"]["graph_tension"] is None
+        assert step["topology"]["P_sig_tryperposition"] >= 0.0
+        assert step["lct"]["active_P_sig_channel"] == "tryperposition"
+        assert step["eth"]["active_tension_channel"] == "tryperposition"
     assert baseline["steps"][0]["eth"]["delta_entropy_bits"] is None
     assert baseline["steps"][0]["impact"]["per_qubit"] is None
 

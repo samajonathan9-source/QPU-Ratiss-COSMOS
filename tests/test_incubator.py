@@ -48,6 +48,30 @@ def test_default_profiles_keep_baseline_separate_from_intervention():
     assert baseline.collapse_threshold == sensitivity.collapse_threshold == 1.0
 
 
+def test_tryperposition_is_the_declared_active_lct_eth_channel():
+    profile = incubator.default_profiles()[0]
+    density = {"entropy_bits": 0.5, "purity_global": 0.5, "density_coherence_proxy": 0.9}
+    _, eth = incubator.lct_eth_terms(
+        step=1,
+        density=density,
+        graph_psig=0.0,
+        logical_psig=0.8,
+        logical_coherence=0.9,
+        tryperposition_psig=0.8,
+        reference_graph_psig=0.0,
+        reference_logical_psig=1.0,
+        reference_tryperposition_psig=1.0,
+        previous_entropy_bits=0.2,
+        gradient_frobenius=3.0,
+        correlation_matrix=np.eye(2),
+        profile=profile,
+    )
+    assert eth["graph_tension"] is None
+    assert eth["active_tension_channel"] == "tryperposition"
+    assert eth["active_tension"] == eth["tryperposition_tension"]
+    assert eth["active_tension"] > profile.collapse_threshold
+
+
 def test_lct_terms_mark_their_pre_intervention_measurement_state():
     profile = incubator.default_profiles()[0]
     density = {"entropy_bits": 0.5, "purity_global": 0.75, "density_coherence_proxy": 0.9}
@@ -57,8 +81,10 @@ def test_lct_terms_mark_their_pre_intervention_measurement_state():
         graph_psig=0.0,
         logical_psig=0.8,
         logical_coherence=0.9,
+        tryperposition_psig=0.75,
         reference_graph_psig=0.0,
         reference_logical_psig=1.0,
+        reference_tryperposition_psig=1.0,
         previous_entropy_bits=0.1,
         gradient_frobenius=0.4,
         correlation_matrix=np.eye(2),
@@ -68,3 +94,19 @@ def test_lct_terms_mark_their_pre_intervention_measurement_state():
     assert eth["measurement_state"] == "pre_intervention_density"
     assert eth["graph_tension"] is None
     assert eth["logical_tension"] is not None
+    assert eth["tryperposition_tension"] is not None
+    assert eth["active_tension_channel"] == "tryperposition"
+
+
+def test_tryperposition_channel_stays_computed_when_graph_psig_is_zero():
+    density = {
+        "density_coherence_proxy": 0.8,
+        "purity_global": 0.64,
+        "entropy_bits": 1.0,
+        "trace_real": 1.0,
+    }
+    signal = incubator.tryperposition_signal(density, graph_psig=0.0, logical_psig=0.75, correlation_matrix=np.eye(2))
+    assert signal["information_layer_I"]["graph_P_sig"] == 0.0
+    assert signal["information_layer_I"]["logical_P_sig"] == 0.75
+    assert signal["P_sig_tryperposition"] == 0.6000000000000001
+    assert signal["state"] == "Psi = Q x I x M"

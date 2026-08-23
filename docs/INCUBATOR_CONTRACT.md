@@ -14,7 +14,7 @@ Chaque métrique est calculée puis conservée dans l’artefact, y compris `0.0
 
 | Règle | Conséquence dans l’artefact |
 |---|---|
-| `P_sig` de graphe et `P_sig` logique sont différents | Les deux champs restent séparés à chaque pas. |
+| Les trois `P_sig` sont différents | `graph_P_sig`, `logical_P_sig` et `P_sig_tryperposition` restent séparés à chaque pas. |
 | Une grandeur ne s’applique pas | Elle est `null` et son champ `*_scope` explique pourquoi. |
 | Une intervention est testée | Elle est une **scénario séparé** qui conserve aussi une baseline observationnelle intacte. |
 | Une loi est candidate | Elle est étiquetée `experimental_candidate`, jamais présentée comme une loi matérielle validée. |
@@ -30,6 +30,7 @@ L’incubateur ne mélange pas les plans de données. La couche densité provien
 | Graphe de corrélations | Rips sur corrélations de la densité | `graph_topology.P_sig`, Betti, matrice `M` | Signature de persistance du graphe construit pour ce pas. |
 | Sidecar logique | `TopologicalQubit` RATISS | `logical_topology.P_sig`, phase, twist, cohérence, état `protected` | Simulation algorithmique séparée, sans revendication de porte topologique matérielle. |
 | LCT/ETH | Adaptateur incubateur | phase signée, facteur LCT, delta entropie, tension, impact, route TSP | Instrumentation expérimentale calculée à partir des trois plans précédents. |
+| Tryperposition active | Composition `Psi = Q x I x M` | `P_sig_tryperposition`, tension active, facteurs LCT actifs | Canal calculé qui coexiste avec les sorties brutes ; ce n’est ni un fallback ni une preuve ZK. |
 
 ## Variables et convention de temps
 
@@ -45,12 +46,13 @@ Un pas `k` correspond à un préfixe du circuit : `k=0` est l’état initial et
 | `M` | matrice de corrélations mutuelles déjà exportée par le moteur | Sert à la variation matricielle et aux impacts ; ce n’est pas une matrice électromagnétique. |
 | `gradient_frobenius` | `||M_k − M_(k−1)||_F / dt` | `null` au pas initial. |
 | `oscillation_stress` | `gradient_frobenius × (1 − purity_global)` | Transcription expérimentale de la proposition `Ω`; aucune action sur `rho` dans la baseline. |
+| `P_sig_tryperposition` | `Q × I × M` décrit ci-dessous | Troisième signature calculée, distincte des signaux graphe et logique. |
 
 ## LCT libre : facteur observé, pas commande cachée
 
 Les noyaux RATISS-Net et TTF emploient une phase oscillante et une amplitude modulée par la cohérence dans la règle `ΔW = η × φ × P_sig × C`. [4] [5] L’incubateur reprend cette structure **comme mesure de couplage** et non comme une mise à jour forcée de la densité quantique.
 
-Pour chaque pas, il enregistre deux formulations, sans choisir celle qui paraît la plus favorable :
+Pour chaque pas, il enregistre trois formulations sans substituer leurs sources :
 
 ```text
 phase_signed = cos(omega_lct × t_k)
@@ -59,13 +61,28 @@ lct_factor_graph = phase_signed × graph_P_sig × density_coherence_proxy
 lct_factor_logical = phase_signed × logical_P_sig × logical_coherence
 candidate_delta_w_graph = eta_lct × lct_factor_graph
 candidate_delta_w_logical = eta_lct × lct_factor_logical
+lct_factor_tryperposition = phase_signed × P_sig_tryperposition × density_coherence_proxy
+candidate_delta_w_tryperposition = eta_lct × lct_factor_tryperposition
 ```
 
 `logical_P_sig` et `logical_coherence` sont valides uniquement parce que cette trajectoire est une simulation densité couplée au sidecar. Dans un chemin counts, photonique ou bio non densité, `logical_P_sig` doit rester `null` et les facteurs logiques associés sont eux aussi `null`. [2]
 
+## Tryperposition active : `Psi = Q x I x M`
+
+Le solveur AEON de tryperposition sépare une couche quantique, une couche informationnelle et une couche matérielle, avec une dynamique thermodynamique distincte. [7] COSMOS reprend cette séparation sur les sorties déjà calculées au pas `k`, sans importer les landmarks aléatoires ou un reçu ZK dans la trajectoire Aer :
+
+```text
+Q_k = density_coherence_proxy(rho_k)
+I_k = sqrt(graph_P_sig_k² + logical_P_sig_k² + correlation_amplitude_k²)
+M_k = 1 - abs(Re[Tr(rho_k)] - 1)
+P_sig_tryperposition_k = Q_k × I_k × M_k
+```
+
+`P_sig_tryperposition` est un troisième signal et non un fallback. Si `graph_P_sig=0.0`, le zéro et sa tension de graphe `null` restent inchangés ; la tryperposition est simplement calculée à partir de Q, I et M observés. Le canal LCT/ETH actif emploie sa propre référence initiale, sa propre tension et l’étiquette `active_tension_channel="tryperposition"`.
+
 ## Topologie, tension et condition d’effondrement
 
-La tension candidate proposée par les feuilles est calculée de façon transparente :
+La tension de graphe proposée par les feuilles est calculée de façon transparente :
 
 ```text
 P_sig_reference = graph_P_sig au pas initial
@@ -73,7 +90,9 @@ A = alpha_0 × P_sig_reference
 tension = oscillation_stress / (A × graph_P_sig)
 ```
 
-Si `P_sig_reference`, `A` ou `graph_P_sig` vaut zéro, `tension` est `null`, `collapse_observed=false` et `tension_unavailable_reason` est renseigné. Cette branche est intentionnelle : une persistance H1 nulle est une sortie valide et ne peut pas être remplacée par une référence logique, un plancher ou une constante.
+Si `P_sig_reference`, `A` ou `graph_P_sig` vaut zéro, `graph_tension` est `null` et `graph_tension_unavailable_reason` est renseigné. Cette branche est intentionnelle : une persistance H1 nulle est une sortie valide et ne peut pas être remplacée par une référence logique, un plancher ou une constante.
+
+La tension active est calculée indépendamment avec `P_sig_tryperposition_reference` et `P_sig_tryperposition`; elle est enregistrée dans `tryperposition_tension` puis dans `active_tension`. La condition candidate d’un scénario s’appuie sur `active_tension`, jamais sur une valeur de graphe substituée.
 
 L’impact par qubit est calculé sur la matrice `M` :
 
@@ -107,14 +126,14 @@ Le TSP reste un outil de **sélection et d’inspection postérieure**. À parti
   "schema": "ratiss.cosmos.incubator.v1",
   "provenance": {"validated_on_hardware": false, "scenario": "baseline_observational"},
   "noise_profile": {"temperature_millikelvin": 15.0, "temperature_role": "metadata_only", "t1_seconds": 0.0001},
-  "reference": {"P_sig_reference": 0.0, "A": 0.0},
+    "reference": {"graph_P_sig_reference": 0.0, "P_sig_tryperposition_reference": 0.0},
   "steps": [{
     "step": 0,
     "gate": "initial",
     "density": {"entropy_bits": 0.0, "delta_entropy_bits": null, "purity_global": 1.0},
-    "topology": {"graph_P_sig": 0.0, "logical_P_sig": 0.0},
-    "lct": {"phase_signed": 1.0, "lct_factor_graph": 0.0},
-    "eth": {"eth_rate_bits_per_step": null, "tension": null, "collapse_observed": false},
+    "topology": {"graph_P_sig": 0.0, "logical_P_sig": 0.0, "P_sig_tryperposition": 0.0},
+    "lct": {"phase_signed": 1.0, "lct_factor_graph": 0.0, "active_P_sig_channel": "tryperposition"},
+    "eth": {"eth_rate_bits_per_step": null, "graph_tension": null, "active_tension": null, "collapse_observed": false},
     "tsp_inspection": {"method": "none", "route": []}
   }]
 }
@@ -124,7 +143,7 @@ Ce fragment illustre que `0.0` et `null` sont des sorties différentes. Il n’a
 
 ## Critères de test
 
-Les tests de contrat devront vérifier que l’artefact contient tous les pas, que `delta_entropy_bits` est nul uniquement à l’initialisation, que les valeurs calculées ne sont pas substituées, que les branches à dénominateur nul produisent `null`, et que la baseline ne modifie pas la densité après détection. Les tests distingueront également `graph_P_sig` et `logical_P_sig`, ainsi que la température-métadonnée des paramètres Aer réellement appliqués.
+Les tests de contrat devront vérifier que l’artefact contient tous les pas, que `delta_entropy_bits` est nul uniquement à l’initialisation, que les valeurs calculées ne sont pas substituées, que les branches à dénominateur nul produisent `null`, et que la baseline ne modifie pas la densité après détection. Les tests distinguent `graph_P_sig`, `logical_P_sig` et `P_sig_tryperposition`, ainsi que la température-métadonnée des paramètres Aer réellement appliqués.
 
 ## Références
 
@@ -139,3 +158,5 @@ Les tests de contrat devront vérifier que l’artefact contient tous les pas, q
 [5] [RATISS-ODV-AEON — moteur TTF et micro-update LCT](https://github.com/evinajonathan13-max/RATISS-ODV-AEON/blob/main/kernel/ttf/ttf_compute.py)
 
 [6] [RATISS-ODV-AEON — audit TSP](https://github.com/evinajonathan13-max/RATISS-ODV-AEON/blob/main/kernel/redteam/tsp_attacker.py)
+
+[7] [RATISS-ODV-AEON — solveur de tryperposition](https://github.com/evinajonathan13-max/RATISS-ODV-AEON/blob/main/kernel/solvers/tryperposition_solver.py)

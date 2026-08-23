@@ -36,11 +36,11 @@ Cette distinction est un choix de rigueur utile au laboratoire : un vecteur de c
 
 ![Entropie et tension LCT-ETH issues de l’artefact exécuté](docs/assets/incubator-entropy-eth.png)
 
-L’incubateur relie une trajectoire Aer cinq qubits à l’entropie de von Neumann calculée, à la variation entropique par pas, aux facteurs LCT et au sidecar logique RATISS. Il fournit deux scénarios versionnés : une **baseline strictement observationnelle** et une **sensibilité avec déphasage local explicite**. La seconde n’écrase jamais la baseline : elle porte son profil, les pas impactés et le canal effectivement appliqué.
+L’incubateur relie une trajectoire Aer cinq qubits à l’entropie de von Neumann calculée, à la variation entropique par pas, aux facteurs LCT et au sidecar logique RATISS. Son canal actif est désormais la **tryperposition** `Psi = Q x I x M` : il combine une amplitude issue de la densité simulée, les deux signaux topologiques déjà calculés et un témoin d’intégrité de trace. Il n’écrase ni le `P_sig` de graphe ni le `P_sig` logique. Il fournit deux scénarios versionnés : une **baseline strictement observationnelle** et une **sensibilité avec déphasage local explicite**. La seconde n’écrase jamais la baseline : elle porte son profil, les pas impactés et le canal effectivement appliqué.
 
 ![Séparation effective du P sig de graphe et du P sig logique](docs/assets/incubator-topology-lct.png)
 
-Dans l’exécution versionnée, le `P_sig` de graphe est resté `0.0` aux onze frontières de porte ; la tension qui dépend de ce dénominateur est donc restée indisponible et l’artefact le signale par `null`. Le sidecar logique a, séparément, produit une signature initiale `1.2144127174`, finale `0.7660314642` et minimale `0.7344459623`. Cette dissociation est précisément le comportement attendu du contrat : aucun remplacement n’est effectué pour embellir les courbes.
+Dans l’exécution versionnée, le `P_sig` de graphe est resté `0.0` aux onze frontières de porte ; **cette valeur brute demeure visible** et sa tension propre reste indisponible. Le canal de tryperposition ne la remplace pas : il obtient sa valeur à partir de la composition Q × I × M et maintient LCT/ETH actif. En baseline, son `P_sig` est passé de `1.2144127174` à `0.1677871984` et sa tension maximale a atteint `1.3591909615`. Le sidecar logique a, séparément, produit une signature initiale `1.2144127174`, finale `0.7660314642` et minimale `0.7344459623`.
 
 Le terme **ETH** est le nom interne de la métrique de variation entropique de cet incubateur, pour « effondrement thermodynamique ». Il ne désigne pas l’*Eigenstate Thermalization Hypothesis*. La température de `15 mK` est une métadonnée de profil ; les paramètres Aer réellement utilisés sont `T1`, `T2`, les durées de porte et les probabilités dépolarisantes. [1]
 
@@ -76,8 +76,9 @@ Le diagramme détaillé est dans [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 | Topologie de graphe dans les counts | `P_sig = 0.0` | Valeur conservée, non corrigée ni remplacée |
 | Dernière étape densité | `P_sig logique = 0.7344459623` | Sortie du sidecar algorithmique, séparée du graphe |
 | Incubateur baseline | Entropie finale `3.9055306800` bits | Simulation densité sous le profil de bruit déclaré |
-| Incubateur sensibilité | Tension logique maximale `9.5387401633` | Sortie du scénario à `alpha_0=0.05`, pas une tension matérielle calibrée |
-| Incubateur, P sig graphe | `0.0` à chaque pas | La tension de graphe reste `null`, valeur préservée |
+| Incubateur tryperposition baseline | Tension active maximale `1.3591909615` | Canal Q × I × M calculé, avec `P_sig` graphe brut toujours nul |
+| Incubateur tryperposition sensibilité | Tension active maximale `27.8677038941` | Sortie du scénario à `alpha_0=0.05`, pas une tension matérielle calibrée |
+| Incubateur, P sig graphe | `0.0` à chaque pas | Sa tension propre reste `null` ; le canal tryperposition est un troisième signal, pas un remplacement |
 
 Le détail étape par étape, les commandes et les limites sont dans [`docs/RESULTS.md`](docs/RESULTS.md) et [`docs/PROTOCOL.md`](docs/PROTOCOL.md).
 

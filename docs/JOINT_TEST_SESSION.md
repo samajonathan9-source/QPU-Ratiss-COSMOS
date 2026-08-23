@@ -26,7 +26,7 @@ python3 scripts/generate_incubator_figures.py \
 pytest -q
 ```
 
-La référence actuelle compte onze frontières de porte par scénario. Elle conserve `graph_P_sig=0.0` à chaque pas, une tension de graphe `null` avec une raison explicitement enregistrée et une signature logique séparée. Une différence doit être notée avant toute interprétation.
+La référence actuelle compte onze frontières de porte par scénario. Elle conserve `graph_P_sig=0.0` à chaque pas, une tension de graphe `null` avec une raison explicitement enregistrée, une signature logique séparée et un troisième `P_sig_tryperposition` actif. Une différence doit être notée avant toute interprétation.
 
 ## Étape 2 — Lire les quatre contrastes utiles
 
@@ -34,6 +34,7 @@ La référence actuelle compte onze frontières de porte par scénario. Elle con
 |---|---|---|
 | Baseline vs sensibilité | `scenarios` dans l’artefact | L’intervention déclarée modifie-t-elle l’entropie post-intervention, sans réécrire la baseline ? |
 | Graphe vs sidecar | `topology.graph_P_sig` et `topology.logical_P_sig` | Les deux plans restent-ils distincts lorsque le graphe ne contient aucun H1 fini ? |
+| Tryperposition active | `tryperposition.P_sig_tryperposition` et `eth.active_tension` | La dynamique reste-t-elle calculée sans transformer le `P_sig` de graphe nul en autre chose ? |
 | Avant vs après intervention | `pre_intervention_density` et `density` | Le canal local n’est-il appliqué qu’aux pas ayant `intervention.applied=true` ? |
 | Impact vs TSP | `impact.eligible_qubits` et `tsp_inspection` | La route inspecte-t-elle seulement les nœuds réellement sélectionnés, sans prétendre résoudre un TSP global ? |
 

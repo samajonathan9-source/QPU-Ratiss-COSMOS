@@ -99,6 +99,47 @@ def off_diagonal_crosstalk_proxy(correlation_matrix: np.ndarray) -> float:
     return float(np.mean(np.abs(correlation_matrix[mask])))
 
 
+def tryperposition_signal(
+    density: dict[str, Any],
+    graph_psig: float,
+    logical_psig: float | None,
+    correlation_matrix: np.ndarray,
+) -> dict[str, Any]:
+    """Build the measured Q × I × M channel used by the active incubator path.
+
+    The graph and logical P_sig values remain exported independently.  This is
+    not a fallback that overwrites graph P_sig: it is a third, declared signal
+    built from the simulated density layer (Q), information/topology layer (I)
+    and density-trace integrity witness (M).  It remains evaluable when the
+    finite-H1 graph persistence is exactly zero.
+    """
+    logical_value = 0.0 if logical_psig is None else float(logical_psig)
+    correlation_amplitude = off_diagonal_crosstalk_proxy(correlation_matrix)
+    quantum_amplitude = float(density["density_coherence_proxy"])
+    information_amplitude = float(math.sqrt(graph_psig**2 + logical_value**2 + correlation_amplitude**2))
+    material_amplitude = float(1.0 - abs(float(density["trace_real"]) - 1.0))
+    psig_tryperposition = float(quantum_amplitude * information_amplitude * material_amplitude)
+    return {
+        "state": "Psi = Q x I x M",
+        "P_sig_tryperposition": psig_tryperposition,
+        "quantum_layer_Q": {
+            "density_coherence_proxy": quantum_amplitude,
+            "purity_global": density["purity_global"],
+            "entropy_bits": density["entropy_bits"],
+        },
+        "information_layer_I": {
+            "graph_P_sig": graph_psig,
+            "logical_P_sig": logical_psig,
+            "correlation_amplitude": correlation_amplitude,
+            "information_amplitude": information_amplitude,
+        },
+        "material_layer_M": {
+            "trace_integrity_amplitude": material_amplitude,
+            "scope": "density_trace_integrity_proxy_not_cryptographic_proof",
+        },
+    }
+
+
 def _tension(stress: float | None, alpha_0: float, reference_psig: float, current_psig: float) -> tuple[float | None, str | None]:
     """Compute the candidate tension without an epsilon fallback for zero P_sig."""
     if stress is None:
@@ -120,8 +161,10 @@ def lct_eth_terms(
     graph_psig: float,
     logical_psig: float | None,
     logical_coherence: float | None,
+    tryperposition_psig: float,
     reference_graph_psig: float,
     reference_logical_psig: float | None,
+    reference_tryperposition_psig: float,
     previous_entropy_bits: float | None,
     gradient_frobenius: float | None,
     correlation_matrix: np.ndarray,
@@ -139,6 +182,12 @@ def lct_eth_terms(
         logical_tension, logical_reason = None, "logical_psig_not_applicable"
     else:
         logical_tension, logical_reason = _tension(stress, profile.alpha_0, reference_logical_psig, logical_psig)
+    tryperposition_tension, tryperposition_reason = _tension(
+        stress,
+        profile.alpha_0,
+        reference_tryperposition_psig,
+        tryperposition_psig,
+    )
     crosstalk_proxy = off_diagonal_crosstalk_proxy(correlation_matrix)
     pressure = float(
         profile.pressure_beta
@@ -151,12 +200,16 @@ def lct_eth_terms(
         "phase_amplitude": phase_amplitude,
         "graph_P_sig": graph_psig,
         "logical_P_sig": logical_psig,
+        "P_sig_tryperposition": tryperposition_psig,
+        "active_P_sig_channel": "tryperposition",
         "density_coherence_proxy": density["density_coherence_proxy"],
         "logical_coherence": logical_coherence,
         "lct_factor_graph": float(phase_signed * graph_psig * density["density_coherence_proxy"]),
         "lct_factor_logical": None if logical_psig is None or logical_coherence is None else float(phase_signed * logical_psig * logical_coherence),
         "candidate_delta_w_graph": float(profile.eta_lct * phase_signed * graph_psig * density["density_coherence_proxy"]),
         "candidate_delta_w_logical": None if logical_psig is None or logical_coherence is None else float(profile.eta_lct * phase_signed * logical_psig * logical_coherence),
+        "lct_factor_tryperposition": float(phase_signed * tryperposition_psig * density["density_coherence_proxy"]),
+        "candidate_delta_w_tryperposition": float(profile.eta_lct * phase_signed * tryperposition_psig * density["density_coherence_proxy"]),
     }
     eth = {
         "measurement_state": "pre_intervention_density",
@@ -168,6 +221,10 @@ def lct_eth_terms(
         "graph_tension_unavailable_reason": graph_reason,
         "logical_tension": logical_tension,
         "logical_tension_unavailable_reason": logical_reason,
+        "tryperposition_tension": tryperposition_tension,
+        "tryperposition_tension_unavailable_reason": tryperposition_reason,
+        "active_tension": tryperposition_tension,
+        "active_tension_channel": "tryperposition",
         "crosstalk_proxy": crosstalk_proxy,
         "crosstalk_scope": "correlation_statistic_not_electromagnetic_measurement",
         "eth_pressure_indicator": pressure,
@@ -232,6 +289,7 @@ def run_profile(gates: list[Any], config: Any, simulation: Any, profile: Incubat
     previous_correlation: np.ndarray | None = None
     reference_graph_psig: float | None = None
     reference_logical_psig: float | None = None
+    reference_tryperposition_psig: float | None = None
     records: list[dict[str, Any]] = []
 
     for prefix in range(len(gates) + 1):
@@ -254,9 +312,11 @@ def run_profile(gates: list[Any], config: Any, simulation: Any, profile: Incubat
             logical_topology=logical_topology,
         )
         graph_psig, logical_psig, logical_coherence, pre_correlation = _step_topology(pre_artifact)
+        pre_tryperposition = tryperposition_signal(pre_density, graph_psig, logical_psig, pre_correlation)
         if reference_graph_psig is None:
             reference_graph_psig = graph_psig
             reference_logical_psig = logical_psig
+            reference_tryperposition_psig = pre_tryperposition["P_sig_tryperposition"]
         gradient = frobenius_gradient(pre_correlation, previous_correlation, profile.timestep)
         impacts = impact_by_qubit(pre_correlation, previous_correlation, profile.timestep)
         lct, eth = lct_eth_terms(
@@ -265,21 +325,22 @@ def run_profile(gates: list[Any], config: Any, simulation: Any, profile: Incubat
             graph_psig=graph_psig,
             logical_psig=logical_psig,
             logical_coherence=logical_coherence,
+            tryperposition_psig=pre_tryperposition["P_sig_tryperposition"],
             reference_graph_psig=reference_graph_psig,
             reference_logical_psig=reference_logical_psig,
+            reference_tryperposition_psig=reference_tryperposition_psig,
             previous_entropy_bits=previous_entropy_bits,
             gradient_frobenius=gradient,
             correlation_matrix=pre_correlation,
             profile=profile,
         )
         eligible_qubits = [] if impacts is None else [index for index, impact in enumerate(impacts) if impact > profile.impact_threshold]
-        available_tensions = [value for value in (eth["graph_tension"], eth["logical_tension"]) if value is not None]
-        maximum_tension = max(available_tensions) if available_tensions else None
-        collapse_condition_met = bool(maximum_tension is not None and maximum_tension > profile.collapse_threshold)
+        active_tension = eth["active_tension"]
+        collapse_condition_met = bool(active_tension is not None and active_tension > profile.collapse_threshold)
         dephasing_strength = None
         applied_qubits: list[int] = []
-        if profile.apply_local_dephasing and collapse_condition_met and eligible_qubits and maximum_tension is not None:
-            dephasing_strength = float(min(1.0, (maximum_tension - 1.0) / maximum_tension))
+        if profile.apply_local_dephasing and collapse_condition_met and eligible_qubits and active_tension is not None:
+            dephasing_strength = float(min(1.0, (active_tension - 1.0) / active_tension))
             rho_noisy = local_z_dephasing(rho_noisy, eligible_qubits, dephasing_strength, config.n_qubits)
             applied_qubits = eligible_qubits
 
@@ -296,6 +357,7 @@ def run_profile(gates: list[Any], config: Any, simulation: Any, profile: Incubat
         )
         output = output_artifact.to_dict()
         output_graph_psig, output_logical_psig, output_logical_coherence, output_correlation = _step_topology(output_artifact)
+        output_tryperposition = tryperposition_signal(output_density, output_graph_psig, output_logical_psig, output_correlation)
         eth["collapse_condition_met"] = collapse_condition_met
         eth["collapse_threshold"] = profile.collapse_threshold
         eth["collapse_observed"] = collapse_condition_met
@@ -313,6 +375,7 @@ def run_profile(gates: list[Any], config: Any, simulation: Any, profile: Incubat
                 "logical_P_sig": output_logical_psig,
                 "logical_coherence": output_logical_coherence,
                 "logical_scope": output["logical_topology"].get("scope"),
+                "P_sig_tryperposition": output_tryperposition["P_sig_tryperposition"],
             },
             "pre_intervention_topology": {
                 "graph_P_sig": graph_psig,
@@ -320,7 +383,9 @@ def run_profile(gates: list[Any], config: Any, simulation: Any, profile: Incubat
                 "graph_finite_h1": pre_artifact.to_dict()["topology"]["n_finite_h1"],
                 "logical_P_sig": logical_psig,
                 "logical_coherence": logical_coherence,
+                "P_sig_tryperposition": pre_tryperposition["P_sig_tryperposition"],
             },
+            "tryperposition": output_tryperposition,
             "lct": lct,
             "eth": eth,
             "impact": {
@@ -348,8 +413,10 @@ def run_profile(gates: list[Any], config: Any, simulation: Any, profile: Incubat
         "reference": {
             "graph_P_sig_reference": reference_graph_psig,
             "logical_P_sig_reference": reference_logical_psig,
+            "P_sig_tryperposition_reference": reference_tryperposition_psig,
             "graph_stable_abscissa_A": None if reference_graph_psig is None else float(profile.alpha_0 * reference_graph_psig),
             "logical_stable_abscissa_A": None if reference_logical_psig is None else float(profile.alpha_0 * reference_logical_psig),
+            "tryperposition_stable_abscissa_A": None if reference_tryperposition_psig is None else float(profile.alpha_0 * reference_tryperposition_psig),
         },
         "steps": records,
     }
