@@ -126,6 +126,7 @@ Les tests contrôlent la chaîne GHZ demandée et la lecture des counts bruts. L
 | [`RESULTS.md`](docs/RESULTS.md) | Valeurs réellement observées et recette de reproduction |
 | [`INCUBATOR_CONTRACT.md`](docs/INCUBATOR_CONTRACT.md) | Variables, conventions de temps et règles de non-substitution |
 | [`INCUBATOR_SOURCE_MAP.md`](docs/INCUBATOR_SOURCE_MAP.md) | Réemploi RATISS-Net/ODV-AEON et éléments volontairement exclus |
+| [`JOINT_TEST_SESSION.md`](docs/JOINT_TEST_SESSION.md) | Rejouer la baseline et préparer une hypothèse sans effacer les résultats |
 | [`VISUAL_AUDIT.md`](docs/VISUAL_AUDIT.md) | Vérification des graphiques versionnés |
 
 Distribué sous [licence MIT](LICENSE).

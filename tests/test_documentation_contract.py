@@ -43,3 +43,12 @@ def test_incubator_sensitivity_is_declared_as_a_separate_intervention_scenario()
     assert all(step["lct"]["measurement_state"] == "pre_intervention_density" for step in sensitivity["steps"])
     assert all(step["eth"]["measurement_state"] == "pre_intervention_density" for step in sensitivity["steps"])
     assert all(step["intervention"]["baseline_density_overwritten"] is False for step in sensitivity["steps"])
+
+
+def test_incubator_joint_test_session_is_documented():
+    guide = ROOT / "docs" / "JOINT_TEST_SESSION.md"
+    assert guide.is_file()
+    content = guide.read_text(encoding="utf-8")
+    assert "baseline" in content
+    assert "P_sig" in content
+    assert "nouvel artefact" in content
