@@ -3,3 +3,5 @@ __pycache__/
 artifacts/*.json
 !artifacts/.gitkeep
 !artifacts/cosmos_run.json
+!artifacts/incubator_lct_eth_run.json
+!artifacts/incubator_lct_eth_summary.json

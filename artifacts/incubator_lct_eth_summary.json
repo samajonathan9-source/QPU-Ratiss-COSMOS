@@ -1,0 +1,92 @@
+{
+  "figures": [
+    "docs/assets/incubator-entropy-eth.png",
+    "docs/assets/incubator-topology-lct.png"
+  ],
+  "scenarios": [
+    {
+      "name": "baseline_observational",
+      "n_steps": 11,
+      "entropy_bits_initial": -0.0,
+      "entropy_bits_final": 3.9055306799869483,
+      "entropy_bits_max": 3.9055306799869483,
+      "entropy_bits_net_change": 3.9055306799869483,
+      "eth_rate_min": 0.020720824559030238,
+      "eth_rate_max": 0.9384926797909281,
+      "graph_psig_unique_values": [
+        0.0
+      ],
+      "logical_psig_initial": 1.2144127173638353,
+      "logical_psig_final": 0.7660314642030316,
+      "logical_psig_min": 0.7344459623043811,
+      "logical_psig_max": 1.2144127173638353,
+      "logical_tension_max": 0.4562178860076182,
+      "graph_tension_unavailable_steps": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "collapse_condition_steps": [],
+      "intervention_applied_steps": [],
+      "temperature_millikelvin": 15.0,
+      "temperature_role": "metadata_only_not_used_to_derive_aer_parameters"
+    },
+    {
+      "name": "lct_eth_sensitivity_local_dephasing",
+      "n_steps": 11,
+      "entropy_bits_initial": -0.0,
+      "entropy_bits_final": 3.9869217504065726,
+      "entropy_bits_max": 3.9869217504065726,
+      "entropy_bits_net_change": 3.9869217504065726,
+      "eth_rate_min": 0.012123456069021987,
+      "eth_rate_max": 0.9384926797909285,
+      "graph_psig_unique_values": [
+        0.0
+      ],
+      "logical_psig_initial": 1.2144127173638353,
+      "logical_psig_final": 0.7660314642030316,
+      "logical_psig_min": 0.7344459623043811,
+      "logical_psig_max": 1.2144127173638353,
+      "logical_tension_max": 9.53874016331537,
+      "graph_tension_unavailable_steps": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "collapse_condition_steps": [
+        2,
+        3,
+        5,
+        6,
+        7,
+        10
+      ],
+      "intervention_applied_steps": [
+        2,
+        3,
+        5,
+        6,
+        7,
+        10
+      ],
+      "temperature_millikelvin": 15.0,
+      "temperature_role": "metadata_only_not_used_to_derive_aer_parameters"
+    }
+  ]
+}
