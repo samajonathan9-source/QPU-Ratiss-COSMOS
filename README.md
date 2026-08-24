@@ -5,135 +5,135 @@
 <h1 align="center">QPU-Ratiss-COSMOS</h1>
 
 <p align="center">
-  <strong>Laboratoire de simulation QPU locale</strong><br/>
-  Circuits bruités · trajectoires de matrices densité · topologie algorithmique RATISS —<br/>
-  artefacts reproductibles et vérifiables sur CPU.
+  <strong>Local QPU simulation laboratory</strong><br/>
+  Noisy circuits · density-matrix trajectories · RATISS algorithmic topology —<br/>
+  reproducible, verifiable CPU artifacts.
 </p>
 
 <p align="center">
-  <a href="LICENSE"><img alt="Licence MIT" src="https://img.shields.io/badge/Licence-MIT-42d6ad?style=for-the-badge"></a>
+  <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/License-MIT-42d6ad?style=for-the-badge"></a>
   <img alt="Python ≥ 3.11" src="https://img.shields.io/badge/Python-%E2%89%A5%203.11-79b8ff?style=for-the-badge&logo=python&logoColor=white">
   <img alt="Qiskit 2.5.2" src="https://img.shields.io/badge/Qiskit-2.5.2-6929c4?style=for-the-badge&logo=ibm&logoColor=white">
   <img alt="Qiskit Aer 0.17.2" src="https://img.shields.io/badge/Qiskit%20Aer-0.17.2-6929c4?style=for-the-badge&logo=ibm&logoColor=white">
   <img alt="NumPy ≥ 1.26" src="https://img.shields.io/badge/NumPy-%E2%89%A5%201.26-79b8ff?style=for-the-badge&logo=numpy&logoColor=white">
-  <img alt="Reproductibilité déterministe" src="https://img.shields.io/badge/Reproductibilit%C3%A9-d%C3%A9terministe-ff927d?style=for-the-badge">
+  <img alt="Deterministic reproducibility" src="https://img.shields.io/badge/Reproducibility-deterministic-ff927d?style=for-the-badge">
 </p>
 
 <p align="center">
-  <em>Architecte & investigateur principal : <strong>Jonathan Evina</strong> ·
+  <em>Architect & principal investigator: <strong>Jonathan Evina</strong> ·
   <a href="https://orcid.org/0009-0000-4092-5313">ORCID 0009-0000-4092-5313</a></em>
 </p>
 
 ---
 
-## Sommaire
+## Table of contents
 
-1. [Nature de l'instrument](#1-nature-de-linstrument)
-2. [Frontière de revendication](#2-frontière-de-revendication)
-3. [Trois régimes expérimentaux](#3-trois-régimes-expérimentaux)
-4. [Résultats calculés et reproduits](#4-résultats-calculés-et-reproduits)
-5. [L'incubateur LCT-ETH](#5-lincubateur-lct-eth)
-6. [Pile technologique](#6-pile-technologique)
-7. [Démarrage et reproduction](#7-démarrage-et-reproduction)
-8. [Tests et vérifications](#8-tests-et-vérifications)
-9. [Couplage LCT-ETH et validation QPU réel](#9-couplage-lct-eth-et-validation-qpu-réel)
-10. [Documents du laboratoire](#10-documents-du-laboratoire)
-11. [Citation et licence](#11-citation-et-licence)
+1. [Nature of the instrument](#1-nature-of-the-instrument)
+2. [Claim boundary](#2-claim-boundary)
+3. [Three experimental regimes](#3-three-experimental-regimes)
+4. [Computed and reproduced results](#4-computed-and-reproduced-results)
+5. [The LCT-ETH incubator](#5-the-lct-eth-incubator)
+6. [Technology stack](#6-technology-stack)
+7. [Quick start and reproduction](#7-quick-start-and-reproduction)
+8. [Tests and verification](#8-tests-and-verification)
+9. [LCT-ETH coupling and real-QPU validation](#9-lct-eth-coupling-and-real-qpu-validation)
+10. [Laboratory documents](#10-laboratory-documents)
+11. [Citation and license](#11-citation-and-license)
 
 ---
 
-## 1. Nature de l'instrument
+## 1. Nature of the instrument
 
-COSMOS est un **instrument de mesure logiciel**, pas un simulateur de matériel. Il examine une question unique :
+COSMOS is a **software measurement instrument**, not a hardware simulator. It examines a single question:
 
-> **Comment rendre visible une trajectoire de circuit bruitée, ses associations et les états topologiques logiciels RATISS, sans jamais confondre ces objets avec un QPU physique ?**
+> **How can a noisy circuit trajectory, its associations and the RATISS software topological states be made visible, without ever confusing these objects with a physical QPU?**
 
-Il conserve chaque grandeur réellement calculée par le simulateur — y compris quand un signal topologique vaut zéro, quand une tension est indéterminée, ou quand un sidecar n'est pas applicable. Un champ non calculable dans le contrat reste `null`, avec une raison explicite, plutôt qu'une valeur de convenance.
+It retains every quantity genuinely computed by the simulator — including when a topological signal is zero, when a tension is indeterminate, or when a sidecar does not apply. A field that cannot be computed within the contract stays `null`, with an explicit reason, rather than a convenience value.
 
-| Type de projet | Exécution | Entrées principales | Sortie principale |
+| Project type | Execution | Main inputs | Main output |
 |---|---|---|---|
-| Simulation quantique reproductible | Qiskit Aer local (`density_matrix`, `stabilizer`) | Circuit GHZ, programme à cinq qubits, profils LCT-ETH déclarés | Counts bruts, corrélations, topologie, sidecar logique, trajectoires thermodynamiques instrumentées |
+| Reproducible quantum simulation | Qiskit Aer local (`density_matrix`, `stabilizer`) | GHZ circuit, five-qubit program, declared LCT-ETH profiles | Raw counts, correlations, topology, logical sidecar, instrumented thermodynamic trajectories |
 
-## 2. Frontière de revendication
+## 2. Claim boundary
 
-> **Ce dépôt est une simulation QPU virtuelle.** Il n'exécute aucun job sur matériel, ne reproduit aucune calibration matérielle, ne revendique ni la fabrication d'un qubit topologique ni une correction d'erreur, et ne démontre aucune suprématie sur une instance TSP.
+> **This repository is a virtual QPU simulation.** It runs no hardware job, reproduces no hardware calibration, claims neither the fabrication of a topological qubit nor error correction, and demonstrates no supremacy over a TSP instance.
 
-La provenance de chaque artefact porte `validated_on_hardware = false`. Cette frontière est une exigence méthodologique du laboratoire, pas une réserve rhétorique.
+The provenance of every artifact carries `validated_on_hardware = false`. This boundary is a methodological requirement of the laboratory, not a rhetorical hedge.
 
-## 3. Trois régimes expérimentaux
+## 3. Three experimental regimes
 
-Trois contrats de données distincts, volontairement non fusionnés :
+Three distinct data contracts, deliberately not merged:
 
-| Régime | Entrées | Grandeurs calculées | Volontairement absent |
+| Regime | Inputs | Computed quantities | Deliberately absent |
 |---|---|---|---|
-| `counts_scaling` | Counts GHZ Aer, 8 → 20 qubits | Masse dominante, association RATISS, topologie de graphe | Matrice densité, `P_sig` logique |
-| `density_topology` | Programme à cinq qubits sous bruit déclaré | Densité, corrélations, topologie de graphe, sidecar `TopologicalQubit` | Preuve QPU, correction d'erreur, modèle de dispositif |
-| `incubator_lct_eth` | Même programme densité, deux profils | Entropie, taux ETH, facteurs LCT, impacts, route TSP, scénarios séparés | Calibration cryogénique réelle, ETH statistique, contrôle matériel |
+| `counts_scaling` | GHZ Aer counts, 8 → 20 qubits | Dominant mass, RATISS association, graph topology | Density matrix, logical `P_sig` |
+| `density_topology` | Five-qubit program under declared noise | Density, correlations, graph topology, `TopologicalQubit` sidecar | QPU proof, error correction, device model |
+| `incubator_lct_eth` | Same density program, two profiles | Entropy, ETH rate, LCT factors, impacts, TSP route, separate scenarios | Real cryogenic calibration, statistical ETH, hardware control |
 
-Un vecteur de counts est une observation échantillonnée : il n'autorise pas à reconstruire implicitement une matrice densité complète. L'incubateur conserve `P_sig` de graphe et `P_sig` logique dans deux champs distincts et ne substitue jamais l'un à l'autre.
+A counts vector is a sampled observation: it does not authorise implicitly reconstructing a full density matrix. The incubator keeps graph `P_sig` and logical `P_sig` in two distinct fields and never substitutes one for the other.
 
-## 4. Résultats calculés et reproduits
+## 4. Computed and reproduced results
 
-### 4.1 Mise à l'échelle des counts GHZ
+### 4.1 GHZ counts scaling
 
-![Masse dominante GHZ, Aer idéal et bruité](docs/assets/cosmos-counts-scaling.png)
+![Dominant GHZ mass, ideal and noisy Aer](docs/assets/cosmos-counts-scaling.png)
 
-La masse du résultat le plus fréquent est calculée à partir des counts Aer bruts (seed `42`, canal CX dépolarisant `p=0.02`, 256 tirs). Aux quatre tailles testées, la courbe bruitée reste sous la courbe idéale. Données : [`artifacts/cosmos_run.json`](artifacts/cosmos_run.json).
+The mass of the most frequent result is computed from raw Aer counts (seed `42`, depolarising CX channel `p=0.02`, 256 shots). Across the four tested sizes, the noisy curve stays below the ideal curve. Data: [`artifacts/cosmos_run.json`](artifacts/cosmos_run.json).
 
-| Qubits | Profondeur CX | Masse idéale | Masse bruitée | `P_sig` graphe (counts) |
+| Qubits | CX depth | Ideal mass | Noisy mass | Graph `P_sig` (counts) |
 |---:|---:|---:|---:|---:|
 | 8 | 7 | 0.523438 | 0.457031 | 0.0 |
 | 12 | 11 | 0.550781 | 0.425781 | 0.0 |
 | 16 | 15 | 0.507812 | 0.425781 | 0.0 |
 | 20 | 19 | 0.515625 | 0.406250 | 0.0 |
 
-### 4.2 Sidecar logique de la trajectoire densité
+### 4.2 Logical sidecar of the density trajectory
 
-![Sidecar logique RATISS](docs/assets/cosmos-density-sidecar.png)
+![RATISS logical sidecar](docs/assets/cosmos-density-sidecar.png)
 
-Régime densité à cinq qubits (ne pas lire comme une métrique des counts GHZ) : cohérence logicielle et `P_sig` algorithmique du sidecar au fil des portes réellement exécutées.
+Five-qubit density regime (do not read as a metric from the GHZ counts): software coherence and algorithmic `P_sig` of the sidecar across the actually executed gates.
 
-### 4.3 Tableau des observations enregistrées
+### 4.3 Recorded observations
 
-| Observation | Valeur | Lecture autorisée |
+| Observation | Value | Authorised reading |
 |---|---:|---|
-| Counts 20 qubits, masse idéale | 0.515625 | Échantillonnage pour ce seed et ce nombre de tirs |
-| Counts 20 qubits, masse bruitée | 0.406250 | Effet du canal déclaré, pas sur appareil réel |
-| Topologie de graphe dans les counts | `P_sig = 0.0` | Conservée, non corrigée ni remplacée |
-| Dernière étape densité, `P_sig` logique | `0.4948611575` | Sortie du sidecar, séparée du graphe |
-| Incubateur baseline, entropie finale | `3.9055306800` bits | Simulation sous le profil de bruit déclaré |
-| Incubateur tryperposition, tension max (baseline) | `17.3833666846` | Canal Q×I×M, pendant l'oscillation déterministe |
-| Incubateur tryperposition, tension max (sensibilité) | `356.9757698741` | Scénario `alpha_0=0.05`, pas une tension matérielle |
-| Incubateur, `P_sig` graphe | Oscillation déterministe `0 → 0.133231 → 0` | Tryperposition non contrôlée, équivalent LCT |
+| Counts 20 qubits, ideal mass | 0.515625 | Sampling for this seed and shot count |
+| Counts 20 qubits, noisy mass | 0.406250 | Effect of the declared channel, not on real hardware |
+| Graph topology in counts | `P_sig = 0.0` | Retained, not corrected or replaced |
+| Final density step, logical `P_sig` | `0.4948611575` | Sidecar output, separate from the graph |
+| Incubator baseline, final entropy | `3.9055306800` bits | Simulation under the declared noise profile |
+| Incubator tryperposition, max tension (baseline) | `17.3833666846` | Q×I×M channel, during the deterministic `P_sig` oscillation |
+| Incubator tryperposition, max tension (sensitivity) | `356.9757698741` | `alpha_0=0.05` scenario, not a calibrated hardware tension |
+| Incubator, graph `P_sig` | Deterministic oscillation `0 → 0.133231 → 0` | Uncontrolled tryperposition, LCT equivalent |
 
-## 5. L'incubateur LCT-ETH
+## 5. The LCT-ETH incubator
 
-![Entropie et tension LCT-ETH](docs/assets/incubator-entropy-eth.png)
+![Entropy and LCT-ETH tension](docs/assets/incubator-entropy-eth.png)
 
-L'incubateur relie une trajectoire Aer cinq qubits à l'entropie de von Neumann calculée, à la variation entropique par pas, aux facteurs LCT et au sidecar logique RATISS. Son canal actif est la **tryperposition** `Psi = Q x I x M` : une amplitude issue de la densité simulée (Q), les deux signaux topologiques déjà calculés (I) et un témoin d'intégrité de trace (M). Il n'écrase ni le `P_sig` de graphe ni le `P_sig` logique. Il fournit deux scénarios versionnés — une **baseline strictement observationnelle** et une **sensibilité avec déphasage local explicite** — la seconde n'écrasant jamais la première.
+The incubator links a five-qubit Aer trajectory to the computed von Neumann entropy, the per-step entropic variation, the LCT factors and the RATISS logical sidecar. Its active channel is the **tryperposition** `Psi = Q x I x M`: an amplitude from the simulated density (Q), the two already-computed topological signals (I) and a trace-integrity witness (M). It overwrites neither the graph `P_sig` nor the logical `P_sig`. It provides two versioned scenarios — a **strictly observational baseline** and a **sensitivity with explicit local dephasing** — the second never overwriting the first.
 
-![Séparation des trois P_sig](docs/assets/incubator-topology-lct.png)
+![Separation of the three P_sig](docs/assets/incubator-topology-lct.png)
 
-**L'oscillation de `P_sig` est le phénomène étudié, pas un artefact.** Aux onze frontières de porte, la persistance du graphe suit `0 → 0.033454 → 0.133231 → 0.025041 → 0.065933 → 0.111181 → 0.041562 → 0 → 0.015558 → 0.0048 → 0`. C'est le régime de **tryperposition non contrôlée** — l'équivalent, pour un système d'information universel, de ce que la LCT décrit pour les systèmes intriqués : la persistance naît, croît et meurt sous la trajectoire sans être pilotée. Elle est produite par un bruit de décohérence **déterministe** (graine figée par pas) : la même exécution donne toujours la même oscillation, la rendant rejouable et auditable. Sa tension propre reste `null` (référence initiale nulle) — cette absence est conservée honnêtement, sans division par epsilon. En baseline, le canal tryperposition passe de `0.1879842865` à `0.1299670353` (tension max `17.3833666846`) ; le sidecar logique, séparément, de `0.1821619076` à `0.5893783934`.
+**The `P_sig` oscillation is the phenomenon under study, not an artefact.** Across the eleven gate boundaries, the graph persistence follows `0 → 0.033454 → 0.133231 → 0.025041 → 0.065933 → 0.111181 → 0.041562 → 0 → 0.015558 → 0.0048 → 0`. This is the **uncontrolled tryperposition** regime — the equivalent, for a universal information system, of what LCT describes for entangled systems: persistence is born, grows and dies along the trajectory without being driven. It is produced by a **deterministic** decoherence noise (seed fixed per step): the same run always yields the same oscillation, making it replayable and auditable. Its own tension stays `null` (zero initial reference) — this absence is honestly retained, with no division by epsilon. In baseline, the tryperposition channel goes from `0.1879842865` to `0.1299670353` (max tension `17.3833666846`); the logical sidecar, separately, from `0.1821619076` to `0.5893783934`.
 
-**ETH est l'environnement virtuel de cryogénie de l'instrument.** Le terme désigne la métrique interne de variation entropique (« effondrement thermodynamique »), non l'*Eigenstate Thermalization Hypothesis*. À chaque frontière de porte, ETH mesure combien d'entropie le « bain » environnant échange avec le qubit logique simulé — comme un cryostat enferme un dispositif réel. La température de `15 mK` est la métadonnée de cette enveloppe ; les paramètres Aer réellement utilisés sont `T1`, `T2`, les durées de porte et les probabilités dépolarisantes. C'est une **équivalence logicielle instrumentée**, pas une calibration cryogénique matérielle. [1]
+**ETH is the instrument's virtual cryogenic environment.** The term denotes the internal metric of entropic variation ("thermodynamic collapse"), not the *Eigenstate Thermalization Hypothesis*. At each gate boundary, ETH measures how much entropy the surrounding "bath" exchanges with the simulated logical qubit — just as a cryostat encloses a real device. The `15 mK` temperature is the metadata of this envelope; the Aer parameters actually used are `T1`, `T2`, gate durations and depolarising probabilities. This is an **instrumented software equivalence**, not a hardware cryogenic calibration. [1]
 
-## 6. Pile technologique
+## 6. Technology stack
 
-| Couche | Technologie | Rôle |
+| Layer | Technology | Role |
 |---|---|---|
-| Langage | Python ≥ 3.11 | Instrument complet |
-| Simulation quantique | Qiskit 2.5.2 · Qiskit Aer 0.17.2 | Matrices densité (`density_matrix`), counts (`stabilizer`), canaux de bruit |
-| Calcul numérique | NumPy ≥ 1.26 | Algèbre linéaire dense, décomposition spectrale |
-| Topologie | Vietoris-Rips (GF(2), maison) | Persistance H0/H1, `P_sig` |
-| Routage d'inspection | Held-Karp exact ≤ 10 nœuds, 2-opt au-delà | Routes TSP d'inspection, jamais un avantage TSP |
-| Visualisation | Matplotlib | Figures dérivées exclusivement des artefacts JSON |
-| Tests | pytest | Contrats de données et reproductibilité |
-| Artefacts | JSON versionné | `ratiss.cosmos.run.v1`, `ratiss.cosmos.incubator.v1` |
+| Language | Python ≥ 3.11 | Full instrument |
+| Quantum simulation | Qiskit 2.5.2 · Qiskit Aer 0.17.2 | Density matrices (`density_matrix`), counts (`stabilizer`), noise channels |
+| Numerical computing | NumPy ≥ 1.26 | Dense linear algebra, spectral decomposition |
+| Topology | Vietoris-Rips (GF(2), in-house) | H0/H1 persistence, `P_sig` |
+| Inspection routing | Held-Karp exact ≤ 10 nodes, 2-opt beyond | TSP inspection routes, never a TSP advantage |
+| Visualisation | Matplotlib | Figures derived exclusively from JSON artifacts |
+| Tests | pytest | Data contracts and reproducibility |
+| Artifacts | Versioned JSON | `ratiss.cosmos.run.v1`, `ratiss.cosmos.incubator.v1` |
 
-Le moteur topologique source ([`ratiss-topological-decoherence-engine`](https://github.com/evinajonathan13-max/ratiss-topological-decoherence-engine)) est une dépendance **explicite par chemin local** — la provenance reste visible, aucune implémentation divergente n'est cachée dans COSMOS.
+The source topological engine ([`ratiss-topological-decoherence-engine`](https://github.com/evinajonathan13-max/ratiss-topological-decoherence-engine)) is an **explicit local-path** dependency — provenance stays visible, no divergent implementation is hidden inside COSMOS.
 
-## 7. Démarrage et reproduction
+## 7. Quick start and reproduction
 
 ```bash
 git clone https://github.com/evinajonathan13-max/QPU-Ratiss-COSMOS.git
@@ -141,85 +141,85 @@ git clone https://github.com/evinajonathan13-max/ratiss-topological-decoherence-
 cd QPU-Ratiss-COSMOS
 python3 -m pip install -e .
 
-# Régimes counts + densité
+# Counts + density regimes
 PYTHONPATH=../ratiss-topological-decoherence-engine/src \
 python3 scripts/run_cosmos.py \
   --engine-src ../ratiss-topological-decoherence-engine/src \
   --output artifacts/cosmos_run.json --shots 256
 
-# Incubateur LCT-ETH (baseline + sensibilité)
+# LCT-ETH incubator (baseline + sensitivity)
 PYTHONPATH=../ratiss-topological-decoherence-engine/src \
 python3 scripts/run_incubator.py \
   --engine-src ../ratiss-topological-decoherence-engine/src \
   --output artifacts/incubator_lct_eth_run.json
 
-# Figures dérivées des seuls artefacts
+# Figures derived from artifacts only
 python3 scripts/generate_docs_figures.py
 python3 scripts/generate_incubator_figures.py
 ```
 
-Deux exécutions successives du même artefact produisent un contenu **bit-pour-bit identique** : la reproductibilité est une propriété vérifiable de l'instrument, pas une promesse.
+Two successive runs of the same artifact produce **bit-for-bit identical** content: reproducibility is a verifiable property of the instrument, not a promise.
 
-## 8. Tests et vérifications
+## 8. Tests and verification
 
 ```bash
 PYTHONPATH=../ratiss-topological-decoherence-engine/src python3 -m pytest -q
 ```
 
-Les tests contrôlent la chaîne GHZ demandée, la lecture des counts bruts, la séparation des contrats counts/densité, la préservation d'un `P_sig` de graphe nul, l'indisponibilité honnête d'une tension à référence nulle, la séparation baseline/sensibilité, le couplage LCT-ETH stabilisé et l'existence des figures documentaires.
+Tests check the requested GHZ chain, raw-counts reading, the counts/density contract separation, the preservation of a zero graph `P_sig`, the honest unavailability of a tension at zero reference, the baseline/sensitivity separation, the stabilised LCT-ETH coupling and the existence of documentation figures.
 
-## 9. Couplage LCT-ETH et validation QPU réel
+## 9. LCT-ETH coupling and real-QPU validation
 
-### 9.1 Couplage LCT-ETH stabilisé
+### 9.1 Stabilised LCT-ETH coupling
 
-L'incubateur couple désormais les deux piliers — superposition (LCT) et effondrement thermodynamique (ETH, la cryogénie virtuelle) — via une modulation **stabilisée** de l'amplitude d'apprentissage :
+The incubator now couples the two pillars — superposition (LCT) and thermodynamic collapse (ETH, the virtual cryogenics) — via a **stabilised** modulation of the learning amplitude:
 
 ```text
-eth_modulation = exp(-|eth_rate|)          # strictement positif, borné dans (0, 1]
+eth_modulation = exp(-|eth_rate|)          # strictly positive, bounded in (0, 1]
 delta_w_coupled = η · φ · P_sig · C · eth_modulation
 ```
 
-Quand le bain cryogénique virtuel est calme (`|ΔS/Δt| ≈ 0`), la modulation vaut `1` (apprentissage complet autorisé). Quand il est agité (grand `|ΔS/Δt|`), elle tend vers `0` (l'apprentissage est suspendu). Ce facteur ne peut **ni inverser le signe du gradient ni l'amplifier** : il amortit seulement, ce qui garantit la stabilité du facteur d'apprentissage — là où le couplage naïf `ΔW · ETH(t)` divergerait quand `ETH(t) < 0`. Mesuré en baseline : à l'étape 2, `eth_rate = 0.94` → modulation `0.39` → delta amorti de `-0.041` à `-0.016`.
+When the virtual cryogenic bath is calm (`|ΔS/Δt| ≈ 0`), the modulation is `1` (full learning authorised). When it is agitated (large `|ΔS/Δt|`), it tends toward `0` (learning is suspended). This factor can **neither invert the gradient sign nor amplify it**: it only damps, which guarantees learning-amplitude stability — whereas the naïve coupling `ΔW · ETH(t)` would diverge when `ETH(t) < 0`. Measured in baseline: at step 2, `eth_rate = 0.94` → modulation `0.39` → delta damped from `-0.041` to `-0.016`.
 
-### 9.2 Validation contre un QPU IBM réel
+### 9.2 Validation against a real IBM QPU
 
-Un circuit de Bell à deux qubits (`h(0) ; cx(0,1) ; measure`) a été soumis **une fois** au backend réel `ibm_marrakesh` (156 qubits, IBM Quantum Platform). L'artéfact [`artifacts/qpu_validation.json`](artifacts/qpu_validation.json) conserve le **Job ID traçable** `da5u376vhnc73fmhnug`, les counts matériels, et compare la divergence LCT entre la simulation Aer locale et le résultat QPU réel.
+A two-qubit Bell circuit (`h(0) ; cx(0,1) ; measure`) was submitted **once** to the real backend `ibm_marrakesh` (156 qubits, IBM Quantum Platform). The artifact [`artifacts/qpu_validation.json`](artifacts/qpu_validation.json) retains the **traceable Job ID** `da5u376vhnc73fmhnug`, the hardware counts, and compares the LCT divergence between the local Aer simulation and the real QPU outcome.
 
-| Source | Counts | Masse marquée `|11⟩` | Divergence LCT |
+| Source | Counts | Marked mass `|11⟩` | LCT divergence |
 |---|---|---:|---:|
-| Idéal (Bell pur) | `{00:256, 11:256}` | 0.500 | — |
-| Aer bruité (CX p=0.02) | `{00:265, 11:243, 01:2, 10:2}` | 0.4746 | 0.000309 |
-| **QPU réel ibm_marrakesh** | `{00:255, 11:243, 01:9, 10:5}` | 0.4746 | 0.000309 |
+| Ideal (pure Bell) | `{00:256, 11:256}` | 0.500 | — |
+| Noisy Aer (CX p=0.02) | `{00:265, 11:243, 01:2, 10:2}` | 0.4746 | 0.000309 |
+| **Real QPU ibm_marrakesh** | `{00:255, 11:243, 01:9, 10:5}` | 0.4746 | 0.000309 |
 
-> **Lecture honnête.** Les masses marquées coïncident (`0.4746`), donc la divergence LCT calculée est identique (ratio 1.0). Le sidecar ne capte pas la différence entre les erreurs `01`/`10` d'Aer (2/2) et du QPU réel (9/5) : il réagit à la masse globale, pas à la structure des erreurs. C'est une **limite documentée** du couplage actuel, pas une revendication de correspondance parfaite. Le QPU valide que le matériel réel reste dans la bande prévue par la simulation pour un état de Bell ; il ne certifie pas que le sidecar prédit le bruit matériel détaillé.
+> **Honest reading.** The marked masses coincide (`0.4746`), so the computed LCT divergence is identical (ratio 1.0). The sidecar does not capture the difference between the `01`/`10` errors of Aer (2/2) and the real QPU (9/5): it reacts to the global mass, not to the error structure. This is a **documented limitation** of the current coupling, not a claim of perfect correspondence. The QPU validates that the real hardware stays within the band predicted by the simulation for a Bell state; it does not certify that the sidecar predicts detailed hardware noise.
 
-### 9.3 Diagnostic classique des counts
+### 9.3 Classical counts diagnostic
 
-Pour capter ce que la masse dominante ne voit pas, un **diagnostic classique** complète la validation. Il mesure, à partir des counts uniquement :
+To capture what the dominant mass cannot see, a **classical diagnostic** complements the validation. It measures, from counts only:
 
-- **Entropie de Shannon** (désordre classique de la distribution, en bits) — `1.0646` (Aer) vs `1.1789` (QPU).
-- **Distance de variation totale** (TVD, fraction de probabilité having fui de l'idéal, bornée `[0,1]`) — `0.0254` (Aer) vs `0.0273` (QPU).
-- **Score de diagnostic** (`0.5·mass_gap + 0.5·TVD`) — `0.0254` (Aer) vs `0.0264` (QPU).
+- **Shannon entropy** (classical disorder of the distribution, in bits) — `1.0646` (Aer) vs `1.1789` (QPU).
+- **Total variation distance** (TVD, fraction of probability that leaked from the ideal, bounded `[0,1]`) — `0.0254` (Aer) vs `0.0273` (QPU).
+- **Diagnostic score** (`0.5·mass_gap + 0.5·TVD`) — `0.0254` (Aer) vs `0.0264` (QPU).
 
-> **Frontière critique.** Ce diagnostic est explicitement étiqueté `classical_counts_diagnostic_not_quantum_entropy`. L'entropie de Shannon des counts **n'est pas** l'entropie de von Neumann de la matrice densité : les counts sont des résultats de mesure projetés qui ont déjà détruit l'information de cohérence. On ne peut donc **pas** approximer `ETH = dS_vN/dt` à partir des counts sans tomographie quantique — et la tomographie est exactement l'explosion exponentielle que l'instrument refuse. Le diagnostic mesure la **fuite de probabilité classique**, pas la perte de cohérence quantique. C'est la frontière honnête entre « ce que les counts nous disent » et « ce qu'ils ne peuvent pas nous dire ».
+> **Critical boundary.** This diagnostic is explicitly labelled `classical_counts_diagnostic_not_quantum_entropy`. The Shannon entropy of counts **is not** the von Neumann entropy of the density matrix: counts are projected measurement outcomes that have already destroyed coherence information. One therefore **cannot** approximate `ETH = dS_vN/dt` from counts without quantum state tomography — and tomography is exactly the exponential explosion the instrument refuses. The diagnostic measures **classical probability leakage**, not quantum coherence loss. This is the honest boundary between "what counts tell us" and "what they cannot tell us".
 
-Le token IBM est lu **uniquement** depuis la variable d'environnement `IBM_QUANTUM_TOKEN` ; il n'est jamais écrit dans l'artéfact, le dépôt ni aucun log.
+The IBM token is read **only** from the `IBM_QUANTUM_TOKEN` environment variable; it is never written into the artifact, the repository or any log.
 
-## 10. Documents du laboratoire
+## 10. Laboratory documents
 
-| Document | Rôle |
+| Document | Role |
 |---|---|
-| [`PROTOCOL.md`](docs/PROTOCOL.md) | Hypothèses, trois régimes, frontières de revendication |
-| [`ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Flux de données et séparation des objets analysés |
-| [`RESULTS.md`](docs/RESULTS.md) | Valeurs réellement observées et recette de reproduction |
-| [`INCUBATOR_CONTRACT.md`](docs/INCUBATOR_CONTRACT.md) | Variables, conventions de temps, règles de non-substitution |
-| [`INCUBATOR_SOURCE_MAP.md`](docs/INCUBATOR_SOURCE_MAP.md) | Réemploi RATISS-Net / ODV-AEON et éléments exclus |
-| [`JOINT_TEST_SESSION.md`](docs/JOINT_TEST_SESSION.md) | Rejouer la baseline et préparer une hypothèse |
-| [`VISUAL_AUDIT.md`](docs/VISUAL_AUDIT.md) | Vérification des graphiques versionnés |
+| [`PROTOCOL.md`](docs/PROTOCOL.md) | Hypotheses, three regimes, claim boundaries |
+| [`ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Data flow and separation of analysed objects |
+| [`RESULTS.md`](docs/RESULTS.md) | Actually observed values and reproduction recipe |
+| [`INCUBATOR_CONTRACT.md`](docs/INCUBATOR_CONTRACT.md) | Variables, time conventions, non-substitution rules |
+| [`INCUBATOR_SOURCE_MAP.md`](docs/INCUBATOR_SOURCE_MAP.md) | RATISS-Net / ODV-AEON reuse and excluded elements |
+| [`JOINT_TEST_SESSION.md`](docs/JOINT_TEST_SESSION.md) | Replay the baseline and prepare a hypothesis |
+| [`VISUAL_AUDIT.md`](docs/VISUAL_AUDIT.md) | Verification of versioned figures |
 
-## 11. Citation et licence
+## 11. Citation and license
 
-Distribué sous [licence MIT](LICENSE) — © 2026 Jonathan Evina.
+Distributed under the [MIT License](LICENSE) — © 2026 Jonathan Evina.
 
 ```bibtex
 @software{evina_cosmos_2026,
@@ -228,10 +228,10 @@ Distribué sous [licence MIT](LICENSE) — © 2026 Jonathan Evina.
              with RATISS Topological Instrumentation},
   year    = {2026},
   url     = {https://github.com/evinajonathan13-max/QPU-Ratiss-COSMOS},
-  note    = {Simulation logicielle reproductible ; aucune exécution sur matériel.}
+  note    = {Reproducible software simulation; no hardware execution.}
 }
 ```
 
-## Références
+## References
 
 [1] [Qiskit Aer — Building Noise Models](https://qiskit.github.io/qiskit-aer/tutorials/3_building_noise_models.html)
