@@ -142,7 +142,11 @@
             "candidate_delta_w_graph": 0.0,
             "candidate_delta_w_logical": 0.018216190760457534,
             "lct_factor_tryperposition": 0.18798428652736093,
-            "candidate_delta_w_tryperposition": 0.018798428652736093
+            "candidate_delta_w_tryperposition": 0.018798428652736093,
+            "eth_modulation": null,
+            "lct_factor_coupled": null,
+            "candidate_delta_w_coupled": null,
+            "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized"
           },
           "eth": {
             "measurement_state": "pre_intervention_density",
@@ -306,7 +310,11 @@
             "candidate_delta_w_graph": 1.952076748471391e-19,
             "candidate_delta_w_logical": 3.989533301408031e-18,
             "lct_factor_tryperposition": 3.6752571231006404e-17,
-            "candidate_delta_w_tryperposition": 3.67525712310064e-18
+            "candidate_delta_w_tryperposition": 3.67525712310064e-18,
+            "eth_modulation": 0.7903223044866331,
+            "lct_factor_coupled": 2.9046376791098114e-17,
+            "candidate_delta_w_coupled": 2.904637679109811e-18,
+            "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized"
           },
           "eth": {
             "measurement_state": "pre_intervention_density",
@@ -495,7 +503,11 @@
             "candidate_delta_w_graph": -0.01019536247902793,
             "candidate_delta_w_logical": -0.0640647999038103,
             "lct_factor_tryperposition": -0.4094263788350387,
-            "candidate_delta_w_tryperposition": -0.04094263788350387
+            "candidate_delta_w_tryperposition": -0.04094263788350387,
+            "eth_modulation": 0.39121708056802684,
+            "lct_factor_coupled": -0.1601745926353828,
+            "candidate_delta_w_coupled": -0.016017459263538283,
+            "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized"
           },
           "eth": {
             "measurement_state": "pre_intervention_density",
@@ -684,7 +696,11 @@
             "candidate_delta_w_graph": -2.9703767120436227e-19,
             "candidate_delta_w_logical": -1.1359314870937834e-17,
             "lct_factor_tryperposition": -5.2515665265093273e-17,
-            "candidate_delta_w_tryperposition": -5.251566526509328e-18
+            "candidate_delta_w_tryperposition": -5.251566526509328e-18,
+            "eth_modulation": 0.5501620309991192,
+            "lct_factor_coupled": -2.889212506151361e-17,
+            "candidate_delta_w_coupled": -2.8892125061513618e-18,
+            "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized"
           },
           "eth": {
             "measurement_state": "pre_intervention_density",
@@ -873,7 +889,11 @@
             "candidate_delta_w_graph": 0.0039471685697485505,
             "candidate_delta_w_logical": 0.0595221653472033,
             "lct_factor_tryperposition": 0.23698585796162322,
-            "candidate_delta_w_tryperposition": 0.023698585796162325
+            "candidate_delta_w_tryperposition": 0.023698585796162325,
+            "eth_modulation": 0.7903223044866319,
+            "lct_factor_coupled": 0.18729520939497168,
+            "candidate_delta_w_coupled": 0.01872952093949717,
+            "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized"
           },
           "eth": {
             "measurement_state": "pre_intervention_density",
@@ -1062,7 +1082,11 @@
             "candidate_delta_w_graph": 1.3989090695992249e-18,
             "candidate_delta_w_logical": 1.710384491050421e-17,
             "lct_factor_tryperposition": 3.435268792720355e-17,
-            "candidate_delta_w_tryperposition": 3.4352687927203555e-18
+            "candidate_delta_w_tryperposition": 3.4352687927203555e-18,
+            "eth_modulation": 0.39121708056802473,
+            "lct_factor_coupled": 1.3439358280545003e-17,
+            "candidate_delta_w_coupled": 1.3439358280545005e-18,
+            "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized"
           },
           "eth": {
             "measurement_state": "pre_intervention_density",
@@ -1251,7 +1275,11 @@
             "candidate_delta_w_graph": -0.0013310651557833207,
             "candidate_delta_w_logical": -0.0498674012692186,
             "lct_factor_tryperposition": -0.062394317156024365,
-            "candidate_delta_w_tryperposition": -0.006239431715602437
+            "candidate_delta_w_tryperposition": -0.006239431715602437,
+            "eth_modulation": 0.6353663381208581,
+            "lct_factor_coupled": -0.039643248810974634,
+            "candidate_delta_w_coupled": -0.003964324881097463,
+            "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized"
           },
           "eth": {
             "measurement_state": "pre_intervention_density",
@@ -1440,7 +1468,11 @@
             "candidate_delta_w_graph": -0.0,
             "candidate_delta_w_logical": -1.6799155275965295e-17,
             "lct_factor_tryperposition": -1.580728184512489e-17,
-            "candidate_delta_w_tryperposition": -1.580728184512489e-18
+            "candidate_delta_w_tryperposition": -1.580728184512489e-18,
+            "eth_modulation": 0.7852275053185388,
+            "lct_factor_coupled": -1.2412312489114446e-17,
+            "candidate_delta_w_coupled": -1.2412312489114447e-18,
+            "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized"
           },
           "eth": {
             "measurement_state": "pre_intervention_density",
@@ -1629,7 +1661,11 @@
             "candidate_delta_w_graph": 0.00041211095023793547,
             "candidate_delta_w_logical": 0.05416142881483757,
             "lct_factor_tryperposition": 0.04840342607482308,
-            "candidate_delta_w_tryperposition": 0.0048403426074823085
+            "candidate_delta_w_tryperposition": 0.0048403426074823085,
+            "eth_modulation": 0.9655400054481378,
+            "lct_factor_coupled": 0.04673544427599321,
+            "candidate_delta_w_coupled": 0.004673544427599321,
+            "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized"
           },
           "eth": {
             "measurement_state": "pre_intervention_density",
@@ -1818,7 +1854,11 @@
             "candidate_delta_w_graph": 6.897487981445878e-20,
             "candidate_delta_w_logical": 2.8117466020407335e-17,
             "lct_factor_tryperposition": 2.448713782208471e-17,
-            "candidate_delta_w_tryperposition": 2.4487137822084714e-18
+            "candidate_delta_w_tryperposition": 2.4487137822084714e-18,
+            "eth_modulation": 0.9794923766188882,
+            "lct_factor_coupled": 2.398496482194802e-17,
+            "candidate_delta_w_coupled": 2.398496482194802e-18,
+            "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized"
           },
           "eth": {
             "measurement_state": "pre_intervention_density",
@@ -2007,7 +2047,11 @@
             "candidate_delta_w_graph": -0.0,
             "candidate_delta_w_logical": -0.043849752467196794,
             "lct_factor_tryperposition": -0.028448986551478254,
-            "candidate_delta_w_tryperposition": -0.002844898655147825
+            "candidate_delta_w_tryperposition": -0.002844898655147825,
+            "eth_modulation": 0.8111923194888424,
+            "lct_factor_coupled": -0.02307759938780053,
+            "candidate_delta_w_coupled": -0.0023077599387800528,
+            "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized"
           },
           "eth": {
             "measurement_state": "pre_intervention_density",
@@ -2224,7 +2268,11 @@
             "candidate_delta_w_graph": 0.0,
             "candidate_delta_w_logical": 0.018216190760457534,
             "lct_factor_tryperposition": 0.18798428652736093,
-            "candidate_delta_w_tryperposition": 0.018798428652736093
+            "candidate_delta_w_tryperposition": 0.018798428652736093,
+            "eth_modulation": null,
+            "lct_factor_coupled": null,
+            "candidate_delta_w_coupled": null,
+            "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized"
           },
           "eth": {
             "measurement_state": "pre_intervention_density",
@@ -2388,7 +2436,11 @@
             "candidate_delta_w_graph": 1.952076748471391e-19,
             "candidate_delta_w_logical": 3.989533301408031e-18,
             "lct_factor_tryperposition": 3.6752571231006404e-17,
-            "candidate_delta_w_tryperposition": 3.67525712310064e-18
+            "candidate_delta_w_tryperposition": 3.67525712310064e-18,
+            "eth_modulation": 0.7903223044866331,
+            "lct_factor_coupled": 2.9046376791098114e-17,
+            "candidate_delta_w_coupled": 2.904637679109811e-18,
+            "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized"
           },
           "eth": {
             "measurement_state": "pre_intervention_density",
@@ -2583,7 +2635,11 @@
             "candidate_delta_w_graph": -0.010523720891279719,
             "candidate_delta_w_logical": -0.0640647999038103,
             "lct_factor_tryperposition": -0.3753666968879387,
-            "candidate_delta_w_tryperposition": -0.03753666968879388
+            "candidate_delta_w_tryperposition": -0.03753666968879388,
+            "eth_modulation": 0.535571703323997,
+            "lct_factor_coupled": -0.20103578122337581,
+            "candidate_delta_w_coupled": -0.020103578122337585,
+            "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized"
           },
           "eth": {
             "measurement_state": "pre_intervention_density",
@@ -2778,7 +2834,11 @@
             "candidate_delta_w_graph": -2.907130210526784e-19,
             "candidate_delta_w_logical": -1.1359314870937834e-17,
             "lct_factor_tryperposition": -5.030310318179545e-17,
-            "candidate_delta_w_tryperposition": -5.030310318179544e-18
+            "candidate_delta_w_tryperposition": -5.030310318179544e-18,
+            "eth_modulation": 0.6107800833102262,
+            "lct_factor_coupled": -3.072413355213993e-17,
+            "candidate_delta_w_coupled": -3.072413355213992e-18,
+            "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized"
           },
           "eth": {
             "measurement_state": "pre_intervention_density",
@@ -2973,7 +3033,11 @@
             "candidate_delta_w_graph": 0.003851410498253045,
             "candidate_delta_w_logical": 0.0595221653472033,
             "lct_factor_tryperposition": 0.22562680947749633,
-            "candidate_delta_w_tryperposition": 0.022562680947749634
+            "candidate_delta_w_tryperposition": 0.022562680947749634,
+            "eth_modulation": 0.7903223044866317,
+            "lct_factor_coupled": 0.17831790002022108,
+            "candidate_delta_w_coupled": 0.01783179000202211,
+            "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized"
           },
           "eth": {
             "measurement_state": "pre_intervention_density",
@@ -3168,7 +3232,11 @@
             "candidate_delta_w_graph": 1.3413325564853875e-18,
             "candidate_delta_w_logical": 1.710384491050421e-17,
             "lct_factor_tryperposition": 3.1155102742618434e-17,
-            "candidate_delta_w_tryperposition": 3.1155102742618433e-18
+            "candidate_delta_w_tryperposition": 3.1155102742618433e-18,
+            "eth_modulation": 0.4087575364130256,
+            "lct_factor_coupled": 1.2734883043767409e-17,
+            "candidate_delta_w_coupled": 1.2734883043767407e-18,
+            "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized"
           },
           "eth": {
             "measurement_state": "pre_intervention_density",
@@ -3363,7 +3431,11 @@
             "candidate_delta_w_graph": -0.0012763868727415561,
             "candidate_delta_w_logical": -0.0498674012692186,
             "lct_factor_tryperposition": -0.05737346304402024,
-            "candidate_delta_w_tryperposition": -0.0057373463044020235
+            "candidate_delta_w_tryperposition": -0.0057373463044020235,
+            "eth_modulation": 0.6671794760578899,
+            "lct_factor_coupled": -0.03827839701333613,
+            "candidate_delta_w_coupled": -0.0038278397013336127,
+            "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized"
           },
           "eth": {
             "measurement_state": "pre_intervention_density",
@@ -3558,7 +3630,11 @@
             "candidate_delta_w_graph": -0.0,
             "candidate_delta_w_logical": -1.6799155275965295e-17,
             "lct_factor_tryperposition": -1.490365847757515e-17,
-            "candidate_delta_w_tryperposition": -1.490365847757515e-18
+            "candidate_delta_w_tryperposition": -1.490365847757515e-18,
+            "eth_modulation": 0.8100671709232293,
+            "lct_factor_coupled": -1.2072964459335305e-17,
+            "candidate_delta_w_coupled": -1.2072964459335303e-18,
+            "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized"
           },
           "eth": {
             "measurement_state": "pre_intervention_density",
@@ -3753,7 +3829,11 @@
             "candidate_delta_w_graph": 0.00040052180749254113,
             "candidate_delta_w_logical": 0.05416142881483757,
             "lct_factor_tryperposition": 0.045719358588072356,
-            "candidate_delta_w_tryperposition": 0.004571935858807236
+            "candidate_delta_w_tryperposition": 0.004571935858807236,
+            "eth_modulation": 0.9700771417538661,
+            "lct_factor_coupled": 0.0443513047019373,
+            "candidate_delta_w_coupled": 0.004435130470193731,
+            "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized"
           },
           "eth": {
             "measurement_state": "pre_intervention_density",
@@ -3948,7 +4028,11 @@
             "candidate_delta_w_graph": 6.684234900726377e-20,
             "candidate_delta_w_logical": 2.8117466020407335e-17,
             "lct_factor_tryperposition": 2.2988972027818063e-17,
-            "candidate_delta_w_tryperposition": 2.2988972027818064e-18
+            "candidate_delta_w_tryperposition": 2.2988972027818064e-18,
+            "eth_modulation": 0.982195729321005,
+            "lct_factor_coupled": 2.2579670147202945e-17,
+            "candidate_delta_w_coupled": 2.2579670147202945e-18,
+            "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized"
           },
           "eth": {
             "measurement_state": "pre_intervention_density",
@@ -4143,7 +4227,11 @@
             "candidate_delta_w_graph": -0.0,
             "candidate_delta_w_logical": -0.043849752467196794,
             "lct_factor_tryperposition": -0.027207032283410433,
-            "candidate_delta_w_tryperposition": -0.0027207032283410437
+            "candidate_delta_w_tryperposition": -0.0027207032283410437,
+            "eth_modulation": 0.8285425143608625,
+            "lct_factor_coupled": -0.022542182936394036,
+            "candidate_delta_w_coupled": -0.002254218293639404,
+            "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized"
           },
           "eth": {
             "measurement_state": "pre_intervention_density",

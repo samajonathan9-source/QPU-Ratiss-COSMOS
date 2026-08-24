@@ -36,8 +36,9 @@
 6. [Pile technologique](#6-pile-technologique)
 7. [Démarrage et reproduction](#7-démarrage-et-reproduction)
 8. [Tests et vérifications](#8-tests-et-vérifications)
-9. [Documents du laboratoire](#9-documents-du-laboratoire)
-10. [Citation et licence](#10-citation-et-licence)
+9. [Couplage LCT-ETH et validation QPU réel](#9-couplage-lct-eth-et-validation-qpu-réel)
+10. [Documents du laboratoire](#10-documents-du-laboratoire)
+11. [Citation et licence](#11-citation-et-licence)
 
 ---
 
@@ -165,9 +166,36 @@ Deux exécutions successives du même artefact produisent un contenu **bit-pour-
 PYTHONPATH=../ratiss-topological-decoherence-engine/src python3 -m pytest -q
 ```
 
-Les tests contrôlent la chaîne GHZ demandée, la lecture des counts bruts, la séparation des contrats counts/densité, la préservation d'un `P_sig` de graphe nul, l'indisponibilité honnête d'une tension à référence nulle, la séparation baseline/sensibilité et l'existence des figures documentaires.
+Les tests contrôlent la chaîne GHZ demandée, la lecture des counts bruts, la séparation des contrats counts/densité, la préservation d'un `P_sig` de graphe nul, l'indisponibilité honnête d'une tension à référence nulle, la séparation baseline/sensibilité, le couplage LCT-ETH stabilisé et l'existence des figures documentaires.
 
-## 9. Documents du laboratoire
+## 9. Couplage LCT-ETH et validation QPU réel
+
+### 9.1 Couplage LCT-ETH stabilisé
+
+L'incubateur couple désormais les deux piliers — superposition (LCT) et effondrement thermodynamique (ETH, la cryogénie virtuelle) — via une modulation **stabilisée** de l'amplitude d'apprentissage :
+
+```text
+eth_modulation = exp(-|eth_rate|)          # strictement positif, borné dans (0, 1]
+delta_w_coupled = η · φ · P_sig · C · eth_modulation
+```
+
+Quand le bain cryogénique virtuel est calme (`|ΔS/Δt| ≈ 0`), la modulation vaut `1` (apprentissage complet autorisé). Quand il est agité (grand `|ΔS/Δt|`), elle tend vers `0` (l'apprentissage est suspendu). Ce facteur ne peut **ni inverser le signe du gradient ni l'amplifier** : il amortit seulement, ce qui garantit la stabilité du facteur d'apprentissage — là où le couplage naïf `ΔW · ETH(t)` divergerait quand `ETH(t) < 0`. Mesuré en baseline : à l'étape 2, `eth_rate = 0.94` → modulation `0.39` → delta amorti de `-0.041` à `-0.016`.
+
+### 9.2 Validation contre un QPU IBM réel
+
+Un circuit de Bell à deux qubits (`h(0) ; cx(0,1) ; measure`) a été soumis **une fois** au backend réel `ibm_marrakesh` (156 qubits, IBM Quantum Platform). L'artéfact [`artifacts/qpu_validation.json`](artifacts/qpu_validation.json) conserve le **Job ID traçable** `da5u376vhnc73fmhnug`, les counts matériels, et compare la divergence LCT entre la simulation Aer locale et le résultat QPU réel.
+
+| Source | Counts | Masse marquée `|11⟩` | Divergence LCT |
+|---|---|---:|---:|
+| Idéal (Bell pur) | `{00:256, 11:256}` | 0.500 | — |
+| Aer bruité (CX p=0.02) | `{00:265, 11:243, 01:2, 10:2}` | 0.4746 | 0.000309 |
+| **QPU réel ibm_marrakesh** | `{00:255, 11:243, 01:9, 10:5}` | 0.4746 | 0.000309 |
+
+> **Lecture honnête.** Les masses marquées coïncident (`0.4746`), donc la divergence LCT calculée est identique (ratio 1.0). Le sidecar ne capte pas la différence entre les erreurs `01`/`10` d'Aer (2/2) et du QPU réel (9/5) : il réagit à la masse globale, pas à la structure des erreurs. C'est une **limite documentée** du couplage actuel, pas une revendication de correspondance parfaite. Le QPU valide que le matériel réel reste dans la bande prévue par la simulation pour un état de Bell ; il ne certifie pas que le sidecar prédit le bruit matériel détaillé.
+
+Le token IBM est lu **uniquement** depuis la variable d'environnement `IBM_QUANTUM_TOKEN` ; il n'est jamais écrit dans l'artéfact, le dépôt ni aucun log.
+
+## 10. Documents du laboratoire
 
 | Document | Rôle |
 |---|---|
@@ -179,7 +207,7 @@ Les tests contrôlent la chaîne GHZ demandée, la lecture des counts bruts, la 
 | [`JOINT_TEST_SESSION.md`](docs/JOINT_TEST_SESSION.md) | Rejouer la baseline et préparer une hypothèse |
 | [`VISUAL_AUDIT.md`](docs/VISUAL_AUDIT.md) | Vérification des graphiques versionnés |
 
-## 10. Citation et licence
+## 11. Citation et licence
 
 Distribué sous [licence MIT](LICENSE) — © 2026 Jonathan Evina.
 

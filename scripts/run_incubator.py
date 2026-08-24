@@ -194,6 +194,13 @@ def lct_eth_terms(
         * (profile.temperature_millikelvin / profile.temperature_reference_millikelvin) ** profile.pressure_gamma
         * (1.0 + profile.crosstalk_kappa * crosstalk_proxy)
     )
+    # Couplage LCT-ETH stabilisé : ETH module l'amplitude d'apprentissage via
+    # exp(-|eth_rate|). Le bain cryogénique virtuel (ETH) calme l'apprentissage
+    # quand il est agité (grand |ΔS/Δt|) et l'autorise quand il est calme
+    # (|ΔS/Δt|≈0). Ce facteur est strictement positif et borné dans (0,1] : le
+    # couplage ne peut ni inverser le signe du gradient ni l'amplifier — il
+    # amortit seulement, ce qui garantit la stabilité du facteur d'apprentissage.
+    eth_modulation = None if eth_rate is None else float(math.exp(-abs(eth_rate)))
     lct = {
         "measurement_state": "pre_intervention_density",
         "phase_signed": phase_signed,
@@ -210,6 +217,10 @@ def lct_eth_terms(
         "candidate_delta_w_logical": None if logical_psig is None or logical_coherence is None else float(profile.eta_lct * phase_signed * logical_psig * logical_coherence),
         "lct_factor_tryperposition": float(phase_signed * tryperposition_psig * density["density_coherence_proxy"]),
         "candidate_delta_w_tryperposition": float(profile.eta_lct * phase_signed * tryperposition_psig * density["density_coherence_proxy"]),
+        "eth_modulation": eth_modulation,
+        "lct_factor_coupled": None if eth_modulation is None else float(phase_signed * tryperposition_psig * density["density_coherence_proxy"] * eth_modulation),
+        "candidate_delta_w_coupled": None if eth_modulation is None else float(profile.eta_lct * phase_signed * tryperposition_psig * density["density_coherence_proxy"] * eth_modulation),
+        "coupling_scope": "eth_amplitude_modulation_exp_minus_abs_rate_stabilized",
     }
     eth = {
         "measurement_state": "pre_intervention_density",
