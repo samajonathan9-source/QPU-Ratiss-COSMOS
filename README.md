@@ -193,6 +193,16 @@ Un circuit de Bell à deux qubits (`h(0) ; cx(0,1) ; measure`) a été soumis **
 
 > **Lecture honnête.** Les masses marquées coïncident (`0.4746`), donc la divergence LCT calculée est identique (ratio 1.0). Le sidecar ne capte pas la différence entre les erreurs `01`/`10` d'Aer (2/2) et du QPU réel (9/5) : il réagit à la masse globale, pas à la structure des erreurs. C'est une **limite documentée** du couplage actuel, pas une revendication de correspondance parfaite. Le QPU valide que le matériel réel reste dans la bande prévue par la simulation pour un état de Bell ; il ne certifie pas que le sidecar prédit le bruit matériel détaillé.
 
+### 9.3 Diagnostic classique des counts
+
+Pour capter ce que la masse dominante ne voit pas, un **diagnostic classique** complète la validation. Il mesure, à partir des counts uniquement :
+
+- **Entropie de Shannon** (désordre classique de la distribution, en bits) — `1.0646` (Aer) vs `1.1789` (QPU).
+- **Distance de variation totale** (TVD, fraction de probabilité having fui de l'idéal, bornée `[0,1]`) — `0.0254` (Aer) vs `0.0273` (QPU).
+- **Score de diagnostic** (`0.5·mass_gap + 0.5·TVD`) — `0.0254` (Aer) vs `0.0264` (QPU).
+
+> **Frontière critique.** Ce diagnostic est explicitement étiqueté `classical_counts_diagnostic_not_quantum_entropy`. L'entropie de Shannon des counts **n'est pas** l'entropie de von Neumann de la matrice densité : les counts sont des résultats de mesure projetés qui ont déjà détruit l'information de cohérence. On ne peut donc **pas** approximer `ETH = dS_vN/dt` à partir des counts sans tomographie quantique — et la tomographie est exactement l'explosion exponentielle que l'instrument refuse. Le diagnostic mesure la **fuite de probabilité classique**, pas la perte de cohérence quantique. C'est la frontière honnête entre « ce que les counts nous disent » et « ce qu'ils ne peuvent pas nous dire ».
+
 Le token IBM est lu **uniquement** depuis la variable d'environnement `IBM_QUANTUM_TOKEN` ; il n'est jamais écrit dans l'artéfact, le dépôt ni aucun log.
 
 ## 10. Documents du laboratoire

@@ -118,6 +118,8 @@ def lct_divergence(*, ideal_mass: float, observed_mass: float, expected_sidecar:
 
 
 def run_validation(engine_src: str | None, *, backend_name: str, shots: int, seed: int) -> dict[str, Any]:
+    from counts_diagnostic import counts_diagnostic
+
     TopologicalQubit, run_qiskit_counts_trajectory = _engine(engine_src)
     circuit = build_bell_circuit()
     ideal_counts = _ideal_counts(shots, seed)
@@ -139,6 +141,9 @@ def run_validation(engine_src: str | None, *, backend_name: str, shots: int, see
     qpu_div = lct_divergence(ideal_mass=ideal_mass, observed_mass=qpu_mass,
                              expected_sidecar=expected_sidecar, observed_sidecar=qpu_sidecar)
 
+    aer_diagnostic = counts_diagnostic(ideal_counts, aer_counts, marked="11")
+    qpu_diagnostic = counts_diagnostic(ideal_counts, qpu_counts, marked="11")
+
     qpu_association = run_qiskit_counts_trajectory({
         "source": {"mode": "cosmos_qpu_validation", "backend": backend_name, "job_id": job_id},
         "trajectory": [{"step": 0, "label": "qpu_bell_counts", "counts": qpu_counts}],
@@ -159,11 +164,12 @@ def run_validation(engine_src: str | None, *, backend_name: str, shots: int, see
         "circuit": {"name": circuit.name, "n_qubits": 2, "gates": ["h(0)", "cx(0,1)", "measure"]},
         "marked_state": "11",
         "ideal": {"counts": ideal_counts, "marked_mass": ideal_mass},
-        "aer": {"counts": aer_counts, "marked_mass": aer_mass, "divergence": aer_div},
+        "aer": {"counts": aer_counts, "marked_mass": aer_mass, "divergence": aer_div, "counts_diagnostic": aer_diagnostic},
         "qpu": {
             "counts": qpu_counts,
             "marked_mass": qpu_mass,
             "divergence": qpu_div,
+            "counts_diagnostic": qpu_diagnostic,
             "counts_association_P_sig": qpu_counts_psig,
             "counts_association_scope": "classical_counts_association_not_density_matrix_tomography",
         },
