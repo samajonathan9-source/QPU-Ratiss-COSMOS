@@ -1,90 +1,138 @@
-# QPU-Ratiss-COSMOS
+<p align="center">
+  <img src="docs/brand/cosmos-logo.png" alt="COSMOS — correlation ring, density core and Q×I×M tryperposition channel" width="240"/>
+</p>
 
-# QPU-Ratiss-COSMOS
+<h1 align="center">QPU-Ratiss-COSMOS</h1>
 
-> **Laboratoire de simulation QPU locale** — circuits bruités, trajectoires de matrices densité et topologie algorithmique RATISS, avec artefacts vérifiables sur CPU.
+<p align="center">
+  <strong>Laboratoire de simulation QPU locale</strong><br/>
+  Circuits bruités · trajectoires de matrices densité · topologie algorithmique RATISS —<br/>
+  artefacts reproductibles et vérifiables sur CPU.
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img alt="Licence MIT" src="https://img.shields.io/badge/Licence-MIT-42d6ad?style=for-the-badge"></a>
+  <img alt="Python ≥ 3.11" src="https://img.shields.io/badge/Python-%E2%89%A5%203.11-79b8ff?style=for-the-badge&logo=python&logoColor=white">
+  <img alt="Qiskit 2.5.2" src="https://img.shields.io/badge/Qiskit-2.5.2-6929c4?style=for-the-badge&logo=ibm&logoColor=white">
+  <img alt="Qiskit Aer 0.17.2" src="https://img.shields.io/badge/Qiskit%20Aer-0.17.2-6929c4?style=for-the-badge&logo=ibm&logoColor=white">
+  <img alt="NumPy ≥ 1.26" src="https://img.shields.io/badge/NumPy-%E2%89%A5%201.26-79b8ff?style=for-the-badge&logo=numpy&logoColor=white">
+  <img alt="Reproductibilité déterministe" src="https://img.shields.io/badge/Reproductibilit%C3%A9-d%C3%A9terministe-ff927d?style=for-the-badge">
+</p>
+
+<p align="center">
+  <em>Architecte & investigateur principal : <strong>Jonathan Evina</strong> ·
+  <a href="https://orcid.org/0009-0000-4092-5313">ORCID 0009-0000-4092-5313</a></em>
+</p>
+
+---
+
+## Sommaire
+
+1. [Nature de l'instrument](#1-nature-de-linstrument)
+2. [Frontière de revendication](#2-frontière-de-revendication)
+3. [Trois régimes expérimentaux](#3-trois-régimes-expérimentaux)
+4. [Résultats calculés et reproduits](#4-résultats-calculés-et-reproduits)
+5. [L'incubateur LCT-ETH](#5-lincubateur-lct-eth)
+6. [Pile technologique](#6-pile-technologique)
+7. [Démarrage et reproduction](#7-démarrage-et-reproduction)
+8. [Tests et vérifications](#8-tests-et-vérifications)
+9. [Documents du laboratoire](#9-documents-du-laboratoire)
+10. [Citation et licence](#10-citation-et-licence)
+
+---
+
+## 1. Nature de l'instrument
+
+COSMOS est un **instrument de mesure logiciel**, pas un simulateur de matériel. Il examine une question unique :
+
+> **Comment rendre visible une trajectoire de circuit bruitée, ses associations et les états topologiques logiciels RATISS, sans jamais confondre ces objets avec un QPU physique ?**
+
+Il conserve chaque grandeur réellement calculée par le simulateur — y compris quand un signal topologique vaut zéro, quand une tension est indéterminée, ou quand un sidecar n'est pas applicable. Un champ non calculable dans le contrat reste `null`, avec une raison explicite, plutôt qu'une valeur de convenance.
 
 | Type de projet | Exécution | Entrées principales | Sortie principale |
 |---|---|---|---|
-| Simulation quantique reproductible | Qiskit Aer local | Circuit GHZ, programme à cinq qubits, profils LCT-ETH déclarés | Counts bruts, corrélations, topologie, sidecar logique et trajectoires thermodynamiques instrumentées |
+| Simulation quantique reproductible | Qiskit Aer local (`density_matrix`, `stabilizer`) | Circuit GHZ, programme à cinq qubits, profils LCT-ETH déclarés | Counts bruts, corrélations, topologie, sidecar logique, trajectoires thermodynamiques instrumentées |
 
-COSMOS sert à examiner une question précise : **comment rendre visible une trajectoire de circuit bruitée, ses associations et les états topologiques logiciels RATISS sans confondre ces objets avec un QPU physique ?** Il conserve les données mesurées par le simulateur, y compris lorsque le signal topologique de graphe vaut zéro ou qu’un sidecar n’est pas applicable.
+## 2. Frontière de revendication
 
-> Ce dépôt est une **simulation QPU virtuelle**. Il n’exécute aucun job sur matériel, ne reproduit aucune calibration matérielle et ne revendique pas la fabrication d’un qubit topologique ni une correction d’erreur.
+> **Ce dépôt est une simulation QPU virtuelle.** Il n'exécute aucun job sur matériel, ne reproduit aucune calibration matérielle, ne revendique ni la fabrication d'un qubit topologique ni une correction d'erreur, et ne démontre aucune suprématie sur une instance TSP.
 
-## Résultat visuel calculé
+La provenance de chaque artefact porte `validated_on_hardware = false`. Cette frontière est une exigence méthodologique du laboratoire, pas une réserve rhétorique.
+
+## 3. Trois régimes expérimentaux
+
+Trois contrats de données distincts, volontairement non fusionnés :
+
+| Régime | Entrées | Grandeurs calculées | Volontairement absent |
+|---|---|---|---|
+| `counts_scaling` | Counts GHZ Aer, 8 → 20 qubits | Masse dominante, association RATISS, topologie de graphe | Matrice densité, `P_sig` logique |
+| `density_topology` | Programme à cinq qubits sous bruit déclaré | Densité, corrélations, topologie de graphe, sidecar `TopologicalQubit` | Preuve QPU, correction d'erreur, modèle de dispositif |
+| `incubator_lct_eth` | Même programme densité, deux profils | Entropie, taux ETH, facteurs LCT, impacts, route TSP, scénarios séparés | Calibration cryogénique réelle, ETH statistique, contrôle matériel |
+
+Un vecteur de counts est une observation échantillonnée : il n'autorise pas à reconstruire implicitement une matrice densité complète. L'incubateur conserve `P_sig` de graphe et `P_sig` logique dans deux champs distincts et ne substitue jamais l'un à l'autre.
+
+## 4. Résultats calculés et reproduits
+
+### 4.1 Mise à l'échelle des counts GHZ
 
 ![Masse dominante GHZ, Aer idéal et bruité](docs/assets/cosmos-counts-scaling.png)
 
-La masse du résultat le plus fréquent a été calculée à partir des counts Aer bruts. Aux quatre tailles testées, la courbe bruitée reste sous la courbe idéale dans cette exécution au canal CX `p=0.02`. Les données et la configuration sont dans [`artifacts/cosmos_run.json`](artifacts/cosmos_run.json).
+La masse du résultat le plus fréquent est calculée à partir des counts Aer bruts (seed `42`, canal CX dépolarisant `p=0.02`, 256 tirs). Aux quatre tailles testées, la courbe bruitée reste sous la courbe idéale. Données : [`artifacts/cosmos_run.json`](artifacts/cosmos_run.json).
 
-![Sidecar logique RATISS dans la trajectoire densité](docs/assets/cosmos-density-sidecar.png)
+| Qubits | Profondeur CX | Masse idéale | Masse bruitée | `P_sig` graphe (counts) |
+|---:|---:|---:|---:|---:|
+| 8 | 7 | 0.523438 | 0.457031 | 0.0 |
+| 12 | 11 | 0.550781 | 0.425781 | 0.0 |
+| 16 | 15 | 0.507812 | 0.425781 | 0.0 |
+| 20 | 19 | 0.515625 | 0.406250 | 0.0 |
 
-Cette seconde figure appartient au régime densité à cinq qubits : elle ne doit pas être lue comme une métrique issue des counts GHZ. Elle expose la cohérence et le `P_sig` algorithmique du sidecar au fil des portes réellement exécutées.
+### 4.2 Sidecar logique de la trajectoire densité
 
-## Trois régimes, trois contrats de données
+![Sidecar logique RATISS](docs/assets/cosmos-density-sidecar.png)
 
-| Régime | Ce qui entre | Ce qui est calculé | Ce qui reste volontairement absent |
-|---|---|---|---|
-| `counts_scaling` | Counts GHZ Aer, 8 à 20 qubits | Masse dominante, association RATISS, topologie de graphe | Matrice densité et `P_sig` logique |
-| `density_topology` | Programme à cinq qubits sous bruit déclaré | Densité, corrélations, topologie de graphe, sidecar `TopologicalQubit` | Preuve sur QPU, correction d’erreur, modèle de dispositif réel |
-| `incubator_lct_eth` | Même programme densité, deux profils déclarés | Entropie, taux ETH interne, facteurs LCT, impacts, route TSP d’inspection, scénarios séparés | Calibration cryogénique, ETH au sens de physique statistique, contrôle matériel |
+Régime densité à cinq qubits (ne pas lire comme une métrique des counts GHZ) : cohérence logicielle et `P_sig` algorithmique du sidecar au fil des portes réellement exécutées.
 
-Cette distinction est un choix de rigueur utile au laboratoire : un vecteur de counts est une observation échantillonnée ; il n’autorise pas à reconstruire implicitement une matrice densité complète. Lorsqu’un champ n’est pas calculable dans le contrat, il reste `null`. L’incubateur conserve aussi `P_sig` de graphe et `P_sig` logique dans deux champs distincts ; il ne remplace jamais le premier par le second.
+### 4.3 Tableau des observations enregistrées
 
-## Incubateur topologique quantique LCT-ETH
-
-![Entropie et tension LCT-ETH issues de l’artefact exécuté](docs/assets/incubator-entropy-eth.png)
-
-L’incubateur relie une trajectoire Aer cinq qubits à l’entropie de von Neumann calculée, à la variation entropique par pas, aux facteurs LCT et au sidecar logique RATISS. Son canal actif est désormais la **tryperposition** `Psi = Q x I x M` : il combine une amplitude issue de la densité simulée, les deux signaux topologiques déjà calculés et un témoin d’intégrité de trace. Il n’écrase ni le `P_sig` de graphe ni le `P_sig` logique. Il fournit deux scénarios versionnés : une **baseline strictement observationnelle** et une **sensibilité avec déphasage local explicite**. La seconde n’écrase jamais la baseline : elle porte son profil, les pas impactés et le canal effectivement appliqué.
-
-![Séparation effective du P sig de graphe et du P sig logique](docs/assets/incubator-topology-lct.png)
-
-Dans l’exécution versionnée, le `P_sig` de graphe **oscille** aux onze frontières de porte : `0 → 0.033454 → 0.133231 → 0.025041 → 0.065933 → 0.111181 → 0.041562 → 0 → 0.015558 → 0.0048 → 0`. Cette oscillation est **voulue** : elle est le régime de **tryperposition non contrôlée**, l’équivalent, pour un système d’information universel, de ce que la LCT décrit pour les systèmes intriqués — la persistance topologique naît, grandit et meurt sous la trajectoire sans être pilotée. Elle est désormais produite par un bruit de décohérence **déterministe** (graine figée par pas) : la même exécution donne toujours la même oscillation, ce qui la rend rejouable et auditable au lieu d’être un hasard de session. Sa tension propre reste `null` aux onze pas, car la référence capturée au pas initial est nulle ; cette absence est conservée honnêtement. Le canal de tryperposition ne remplace pas le `P_sig` de graphe : il obtient sa valeur à partir de la composition Q × I × M et maintient LCT/ETH actif. En baseline, son `P_sig` est passé de `0.1879842865` à `0.1299670353` et sa tension maximale a atteint `17.3833666846`. Le sidecar logique a, séparément, produit une signature initiale `0.1821619076`, finale `0.5893783934` et minimale `0.1821619076`.
-
-Le terme **ETH** est le nom interne de la métrique de variation entropique de cet incubateur, pour « effondrement thermodynamique ». Il ne désigne pas l’*Eigenstate Thermalization Hypothesis*. ETH joue ici le rôle d’un **environnement virtuel de cryogénie** qui encapsule le QPU logiciel : à chaque frontière de porte, il mesure combien d’entropie le « bain » environnant absorbe ou crée autour du qubit logique simulé, comme un cryostat enferme un dispositif réel. La température de `15 mK` est la métadonnée de ce profil d’enveloppe ; les paramètres Aer réellement utilisés sont `T1`, `T2`, les durées de porte et les probabilités dépolarisantes. Il s’agit d’une **équivalence logicielle instrumentée**, pas d’une calibration cryogénique matérielle. [1]
-
-## Architecture
-
-```mermaid
-flowchart LR
-  A[GHZ circuit] --> B[Aer counts]
-  B --> C[RATISS association adapter]
-  D[Five qubit program] --> E[Density simulation]
-  F --> G[Correlation graph]
-  E --> G[Logical sidecar]
-  C --> H[JSON artifact]
-  F --> H
-  G --> H
-  E --> I[Incubator metrics]
-  G --> I
-  E --> I
-  I --> J[Baseline scenario]
-  I --> K[Declared local dephasing scenario]
-  J --> L[Incubator artifact]
-  K --> L
-```
-
-Le diagramme détaillé est dans [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Les deux chemins convergent vers le même format d’artefact sans être confondus sur le plan scientifique.
-
-## Résultats reproduits dans le dépôt
-
-| Observation | Valeur enregistrée | Lecture autorisée |
+| Observation | Valeur | Lecture autorisée |
 |---|---:|---|
-| Counts 20 qubits, masse dominante idéale | 0.515625 | Valeur échantillonnée pour ce seed et ce nombre de tirs |
-| Counts 20 qubits, masse dominante bruitée | 0.406250 | Effet sous le canal de bruit déclaré, pas sur appareil réel |
-| Topologie de graphe dans les counts | `P_sig = 0.0` | Valeur conservée, non corrigée ni remplacée |
-| Dernière étape densité | `P_sig logique = 0.4948611575` | Sortie du sidecar algorithmique, séparée du graphe |
-| Incubateur baseline | Entropie finale `3.9055306800` bits | Simulation densité sous le profil de bruit déclaré |
-| Incubateur tryperposition baseline | Tension active maximale `17.3833666846` | Canal Q × I × M calculé, pendant l’oscillation déterministe du `P_sig` graphe |
-| Incubateur tryperposition sensibilité | Tension active maximale `356.9757698741` | Sortie du scénario à `alpha_0=0.05`, pas une tension matérielle calibrée |
-| Incubateur, P sig graphe | Oscille `0 → 0.133231 → 0` (déterministe) | Tryperposition non contrôlée, équivalent LCT ; sa tension propre reste `null` (référence initiale nulle) |
+| Counts 20 qubits, masse idéale | 0.515625 | Échantillonnage pour ce seed et ce nombre de tirs |
+| Counts 20 qubits, masse bruitée | 0.406250 | Effet du canal déclaré, pas sur appareil réel |
+| Topologie de graphe dans les counts | `P_sig = 0.0` | Conservée, non corrigée ni remplacée |
+| Dernière étape densité, `P_sig` logique | `0.4948611575` | Sortie du sidecar, séparée du graphe |
+| Incubateur baseline, entropie finale | `3.9055306800` bits | Simulation sous le profil de bruit déclaré |
+| Incubateur tryperposition, tension max (baseline) | `17.3833666846` | Canal Q×I×M, pendant l'oscillation déterministe |
+| Incubateur tryperposition, tension max (sensibilité) | `356.9757698741` | Scénario `alpha_0=0.05`, pas une tension matérielle |
+| Incubateur, `P_sig` graphe | Oscillation déterministe `0 → 0.133231 → 0` | Tryperposition non contrôlée, équivalent LCT |
 
-Le détail étape par étape, les commandes et les limites sont dans [`docs/RESULTS.md`](docs/RESULTS.md) et [`docs/PROTOCOL.md`](docs/PROTOCOL.md).
+## 5. L'incubateur LCT-ETH
 
-## Démarrer localement
+![Entropie et tension LCT-ETH](docs/assets/incubator-entropy-eth.png)
 
-Le script utilise le moteur topologique source comme dépendance explicite via un chemin local. Cela rend la provenance visible et évite de cacher une implémentation divergente dans COSMOS.
+L'incubateur relie une trajectoire Aer cinq qubits à l'entropie de von Neumann calculée, à la variation entropique par pas, aux facteurs LCT et au sidecar logique RATISS. Son canal actif est la **tryperposition** `Psi = Q x I x M` : une amplitude issue de la densité simulée (Q), les deux signaux topologiques déjà calculés (I) et un témoin d'intégrité de trace (M). Il n'écrase ni le `P_sig` de graphe ni le `P_sig` logique. Il fournit deux scénarios versionnés — une **baseline strictement observationnelle** et une **sensibilité avec déphasage local explicite** — la seconde n'écrasant jamais la première.
+
+![Séparation des trois P_sig](docs/assets/incubator-topology-lct.png)
+
+**L'oscillation de `P_sig` est le phénomène étudié, pas un artefact.** Aux onze frontières de porte, la persistance du graphe suit `0 → 0.033454 → 0.133231 → 0.025041 → 0.065933 → 0.111181 → 0.041562 → 0 → 0.015558 → 0.0048 → 0`. C'est le régime de **tryperposition non contrôlée** — l'équivalent, pour un système d'information universel, de ce que la LCT décrit pour les systèmes intriqués : la persistance naît, croît et meurt sous la trajectoire sans être pilotée. Elle est produite par un bruit de décohérence **déterministe** (graine figée par pas) : la même exécution donne toujours la même oscillation, la rendant rejouable et auditable. Sa tension propre reste `null` (référence initiale nulle) — cette absence est conservée honnêtement, sans division par epsilon. En baseline, le canal tryperposition passe de `0.1879842865` à `0.1299670353` (tension max `17.3833666846`) ; le sidecar logique, séparément, de `0.1821619076` à `0.5893783934`.
+
+**ETH est l'environnement virtuel de cryogénie de l'instrument.** Le terme désigne la métrique interne de variation entropique (« effondrement thermodynamique »), non l'*Eigenstate Thermalization Hypothesis*. À chaque frontière de porte, ETH mesure combien d'entropie le « bain » environnant échange avec le qubit logique simulé — comme un cryostat enferme un dispositif réel. La température de `15 mK` est la métadonnée de cette enveloppe ; les paramètres Aer réellement utilisés sont `T1`, `T2`, les durées de porte et les probabilités dépolarisantes. C'est une **équivalence logicielle instrumentée**, pas une calibration cryogénique matérielle. [1]
+
+## 6. Pile technologique
+
+| Couche | Technologie | Rôle |
+|---|---|---|
+| Langage | Python ≥ 3.11 | Instrument complet |
+| Simulation quantique | Qiskit 2.5.2 · Qiskit Aer 0.17.2 | Matrices densité (`density_matrix`), counts (`stabilizer`), canaux de bruit |
+| Calcul numérique | NumPy ≥ 1.26 | Algèbre linéaire dense, décomposition spectrale |
+| Topologie | Vietoris-Rips (GF(2), maison) | Persistance H0/H1, `P_sig` |
+| Routage d'inspection | Held-Karp exact ≤ 10 nœuds, 2-opt au-delà | Routes TSP d'inspection, jamais un avantage TSP |
+| Visualisation | Matplotlib | Figures dérivées exclusivement des artefacts JSON |
+| Tests | pytest | Contrats de données et reproductibilité |
+| Artefacts | JSON versionné | `ratiss.cosmos.run.v1`, `ratiss.cosmos.incubator.v1` |
+
+Le moteur topologique source ([`ratiss-topological-decoherence-engine`](https://github.com/evinajonathan13-max/ratiss-topological-decoherence-engine)) est une dépendance **explicite par chemin local** — la provenance reste visible, aucune implémentation divergente n'est cachée dans COSMOS.
+
+## 7. Démarrage et reproduction
 
 ```bash
 git clone https://github.com/evinajonathan13-max/QPU-Ratiss-COSMOS.git
@@ -92,45 +140,59 @@ git clone https://github.com/evinajonathan13-max/ratiss-topological-decoherence-
 cd QPU-Ratiss-COSMOS
 python3 -m pip install -e .
 
+# Régimes counts + densité
 PYTHONPATH=../ratiss-topological-decoherence-engine/src \
 python3 scripts/run_cosmos.py \
   --engine-src ../ratiss-topological-decoherence-engine/src \
   --output artifacts/cosmos_run.json --shots 256
 
+# Incubateur LCT-ETH (baseline + sensibilité)
 PYTHONPATH=../ratiss-topological-decoherence-engine/src \
 python3 scripts/run_incubator.py \
   --engine-src ../ratiss-topological-decoherence-engine/src \
   --output artifacts/incubator_lct_eth_run.json
 
-python3 scripts/generate_incubator_figures.py \
-  --input artifacts/incubator_lct_eth_run.json \
-  --output-dir docs/assets \
-  --summary artifacts/incubator_lct_eth_summary.json
-```
-
-## Tests et vérifications
-
-```bash
-PYTHONPATH=../ratiss-topological-decoherence-engine/src python3 -m pytest -q
+# Figures dérivées des seuls artefacts
 python3 scripts/generate_docs_figures.py
 python3 scripts/generate_incubator_figures.py
 ```
 
-Les tests contrôlent la chaîne GHZ demandée et la lecture des counts bruts. Les figures sont générées uniquement depuis l’artefact JSON déjà produit ; elles n’ajoutent aucune donnée décorative.
+Deux exécutions successives du même artefact produisent un contenu **bit-pour-bit identique** : la reproductibilité est une propriété vérifiable de l'instrument, pas une promesse.
 
-## Documents du laboratoire
+## 8. Tests et vérifications
+
+```bash
+PYTHONPATH=../ratiss-topological-decoherence-engine/src python3 -m pytest -q
+```
+
+Les tests contrôlent la chaîne GHZ demandée, la lecture des counts bruts, la séparation des contrats counts/densité, la préservation d'un `P_sig` de graphe nul, l'indisponibilité honnête d'une tension à référence nulle, la séparation baseline/sensibilité et l'existence des figures documentaires.
+
+## 9. Documents du laboratoire
 
 | Document | Rôle |
 |---|---|
-| [`PROTOCOL.md`](docs/PROTOCOL.md) | Hypothèses, trois régimes et frontières de revendication |
+| [`PROTOCOL.md`](docs/PROTOCOL.md) | Hypothèses, trois régimes, frontières de revendication |
 | [`ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Flux de données et séparation des objets analysés |
 | [`RESULTS.md`](docs/RESULTS.md) | Valeurs réellement observées et recette de reproduction |
-| [`INCUBATOR_CONTRACT.md`](docs/INCUBATOR_CONTRACT.md) | Variables, conventions de temps et règles de non-substitution |
-| [`INCUBATOR_SOURCE_MAP.md`](docs/INCUBATOR_SOURCE_MAP.md) | Réemploi RATISS-Net/ODV-AEON et éléments volontairement exclus |
-| [`JOINT_TEST_SESSION.md`](docs/JOINT_TEST_SESSION.md) | Rejouer la baseline et préparer une hypothèse sans effacer les résultats |
+| [`INCUBATOR_CONTRACT.md`](docs/INCUBATOR_CONTRACT.md) | Variables, conventions de temps, règles de non-substitution |
+| [`INCUBATOR_SOURCE_MAP.md`](docs/INCUBATOR_SOURCE_MAP.md) | Réemploi RATISS-Net / ODV-AEON et éléments exclus |
+| [`JOINT_TEST_SESSION.md`](docs/JOINT_TEST_SESSION.md) | Rejouer la baseline et préparer une hypothèse |
 | [`VISUAL_AUDIT.md`](docs/VISUAL_AUDIT.md) | Vérification des graphiques versionnés |
 
-Distribué sous [licence MIT](LICENSE).
+## 10. Citation et licence
+
+Distribué sous [licence MIT](LICENSE) — © 2026 Jonathan Evina.
+
+```bibtex
+@software{evina_cosmos_2026,
+  author  = {Evina, Jonathan},
+  title   = {QPU-Ratiss-COSMOS: Local QPU Simulation Laboratory
+             with RATISS Topological Instrumentation},
+  year    = {2026},
+  url     = {https://github.com/evinajonathan13-max/QPU-Ratiss-COSMOS},
+  note    = {Simulation logicielle reproductible ; aucune exécution sur matériel.}
+}
+```
 
 ## Références
 
